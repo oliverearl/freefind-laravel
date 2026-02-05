@@ -2,9 +2,9 @@
 
 namespace Freefind\Freefind\Tests;
 
+use Freefind\Freefind\FreefindServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Freefind\Freefind\FreefindServiceProvider;
 
 class TestCase extends Orchestra
 {

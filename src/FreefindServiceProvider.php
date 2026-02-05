@@ -2,9 +2,9 @@
 
 namespace Freefind\Freefind;
 
+use Freefind\Freefind\Commands\FreefindCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Freefind\Freefind\Commands\FreefindCommand;
 
 class FreefindServiceProvider extends PackageServiceProvider
 {
