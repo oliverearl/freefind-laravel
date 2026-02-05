@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Freefind\Freefind\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class FreefindCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'freefind-laravel';
 
     public $description = 'My command';
 
