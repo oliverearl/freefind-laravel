@@ -1,37 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Freefind\Freefind\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Freefind\Freefind\FreefindServiceProvider;
 
-class TestCase extends Orchestra
+abstract class TestCase extends Orchestra
 {
-    protected function setUp(): void
+    /** @inheritDoc */
+    public function getEnvironmentSetUp($app): void
     {
-        parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Freefind\\Freefind\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
+        config()->set('database.default', 'testing');
     }
 
-    protected function getPackageProviders($app)
+    /** @inheritDoc */
+    protected function getPackageProviders($app): array
     {
         return [
             FreefindServiceProvider::class,
         ];
-    }
-
-    public function getEnvironmentSetUp($app)
-    {
-        config()->set('database.default', 'testing');
-
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/../database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
     }
 }
