@@ -6,7 +6,9 @@ Build vertical internal slices, but do not publish partial `0.x` releases. Gener
 
 Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, sequential-request isolation coverage, typed XML request core/bounded transport, secure typed response parsing, the explicit user-initiated XML client call, semantic unstyled XML result components, immutable simple-query builder ergonomics, fixture-backed package fake/assertion support, a skipped-by-default live-contract harness, adoption-focused release documentation, extracted Blade registration, shared browsing-context validation, complete public API PHPDoc and static-analysis generics, suffixed exception names, and the user-facing support/upgrade boundary are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
 
-Next: run the supported PHP 8.4/Laravel 11–12 release matrix and final public-API review; run the live-contract check only when an operator supplies a subscribed account/query.
+Next: complete the final public-API review; rerun the dependency audit from a network-enabled environment; and run the live-contract check only when an operator supplies a subscribed account/query.
+
+Validation: the configured PHP 8.4/8.5 × Laravel 11/12 × lowest/stable matrix passes in disposable copies. The normal suite remains network-free; remote fixture acquisition and live verification are still pending.
 
 ## Milestone 0 — decisions and contract fixtures
 
