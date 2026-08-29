@@ -97,7 +97,7 @@ A successful package lets a developer:
 - Artisan diagnostic command that validates configuration and performs only a user-requested search.
 - An indexability/debug panel for local and staging environments.
 - Compatibility adapters for sites migrating existing raw snippets.
-- Opt-in live contract-test tooling for maintainers with a dedicated subscribed account.
+- Additional diagnostics beyond the manually gated live-contract test already included for maintainers.
 
 ### Explicitly out of scope
 

@@ -181,45 +181,67 @@ The builder is immutable: each option returns a new builder, and only `get()` pe
 ### Advanced search
 
 ```php
+use Freefind\Freefind\Freefind;
 use Freefind\Freefind\Search\Xml\Query\AdvancedQuery;
 use Freefind\Freefind\Search\Xml\Request\SearchOptions;
+use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 
-$results = Freefind::xml()
-    ->execute(
-        query: new AdvancedQuery(
-            allWords: 'laravel package',
-            exactPhrase: 'blade directive',
-            anyWords: 'middleware component',
-            withoutWords: 'wordpress',
-        ),
-        options: new SearchOptions(resultsPerPage: 20),
-    );
+$results = Freefind::xml()->execute(new XmlSearchRequest(
+    app(Freefind::class)->account(),
+    new AdvancedQuery(
+        allWords: 'laravel package',
+        exactPhrase: 'blade directive',
+        anyWords: 'middleware component',
+        withoutWords: 'wordpress',
+    ),
+    new SearchOptions(resultsPerPage: 20),
+));
 ```
 
 ### Refinement
 
 ```php
-$results = Freefind::refine(previousQuery: 'laravel', query: 'middleware')
-    ->get();
+use Freefind\Freefind\Freefind;
+use Freefind\Freefind\Search\Xml\Query\RefinedQuery;
+use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
+use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
+
+$results = Freefind::xml()->execute(new XmlSearchRequest(
+    app(Freefind::class)->account(),
+    new RefinedQuery(new SimpleQuery('middleware'), 'laravel'),
+));
 ```
 
-The high-level client will not expose `search=web`, `dtd=y`, `xslt`, deprecated `id`, or `ics`.
+The high-level client does not expose `search=web`, `dtd=y`, `xslt`, deprecated `id`, or `ics`.
 
 ### Dependency injection
 
 Consumers who prefer contracts over the facade can inject a connection-aware client:
 
 ```php
+use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Contracts\SearchClient;
+use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
+use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 final class SearchController
 {
-    public function __construct(private SearchClient $search) {}
+    public function __construct(
+        private SearchClient $search,
+        private FreefindConfig $config,
+    ) {}
 
-    public function __invoke(SearchRequest $request): View
+    public function __invoke(Request $request): View
     {
+        $validated = $request->validate(['q' => ['required', 'string', 'max:200']]);
+
         return view('search.results', [
-            'results' => $this->search->query($request->validated('q'))->get(),
+            'results' => $this->search->execute(new XmlSearchRequest(
+                $this->config->account,
+                new SimpleQuery($validated['q']),
+            )),
         ]);
     }
 }

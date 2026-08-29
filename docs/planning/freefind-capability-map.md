@@ -25,7 +25,7 @@ This is the traceability document for the downloaded FreeFind material. “Packa
 | Search description | Standard description meta tag; duplicates may be discarded. | Prefer Laravel/SEO tooling; document interoperability rather than own generic `<meta>` tags. |
 | Search title | Standard `<title>`. | Leave to application layout. |
 | Document date | `document-date` meta, including GMT offset, overrides HTTP Last-Modified. | `@freefindDocumentDate($date)` with `DateTimeInterface` formatting. |
-| Ignore page text, follow links | `<!-- FreeFind No Index Page -->`; standard robots `noindex` is ignored. | `@freefindNoIndexPage` and `freefind.exclude` middleware. |
+| Ignore page text, follow links | `<!-- FreeFind No Index Page -->`; standard robots `noindex` is ignored. | `@freefindNoIndexPage` and `freefind.annotate` middleware. |
 | Ignore fragment text | Begin/end no-index comments; link following unaffected. | Paired `@freefindNoIndex` / `@endFreefindNoIndex`. |
 | Do not follow page links | FreeFind or robots `nofollow` meta. | Page policy object/directive; do not alter application robots behavior unless requested. |
 | Do not follow fragment links | Begin/end `FreeFind nofollow` comments. | Paired `@freefindNoFollow` / `@endFreefindNoFollow`. |
