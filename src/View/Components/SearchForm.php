@@ -9,7 +9,6 @@ use Freefind\Freefind\Markup\BrowsingContextName;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Hosted\Language;
 use Freefind\Freefind\Search\Hosted\Section;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
@@ -167,6 +166,6 @@ final class SearchForm extends Component
      */
     public function render(): View
     {
-        return app(Factory::class)->make('freefind-laravel::components.search-form');
+        return view()->make('freefind-laravel::components.search-form');
     }
 }

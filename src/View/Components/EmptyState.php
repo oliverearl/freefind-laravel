@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Freefind\Freefind\View\Components;
 
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
@@ -35,6 +34,6 @@ final class EmptyState extends Component
      */
     public function render(): View
     {
-        return app(Factory::class)->make('freefind-laravel::components.empty-state');
+        return view()->make('freefind-laravel::components.empty-state');
     }
 }
