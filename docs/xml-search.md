@@ -1,6 +1,6 @@
 # XML search request core
 
-The package's XML integration is for subscribed regular Page Search accounts only. This milestone provides typed request models and deterministic HTTPS URL encoding; the transport, bounded response handling, and result parser are still being implemented. Do not treat these request objects as a complete server-side XML client yet.
+The package's XML integration is for subscribed regular Page Search accounts only. The current milestone provides typed request models, deterministic HTTPS URL encoding, and a bounded Laravel HTTP transport; the tolerant response parser and result models are still being implemented. Do not treat these request objects and transport as a complete server-side XML client yet.
 
 FreeFind documents the XML feed as available only in response to a user entering a search term. Do not use it for scheduled, robotic, speculative, bulk, or prefetch queries. DataSearch and web-wide XML search are outside this package's scope.
 
@@ -33,6 +33,6 @@ The returned `XmlSearchUrl` is a validated HTTPS value object. It can be cast to
 
 ## Deliberate boundaries
 
-The request core does not expose deprecated `id`/`ics` fields, `xslt`, DTD enablement, or `search=web`. It does not cache, retry, schedule, or send a request while a value object or URL is created. The forthcoming client will perform one explicit user-initiated search through Laravel's HTTP client, with response-size and XML-parser safety limits.
+The request core does not expose deprecated `id`/`ics` fields, `xslt`, DTD enablement, or `search=web`. It does not cache or schedule searches. The transport uses HTTPS, short configured timeouts, no application cookies or authorization headers, one retry for connection/transient-server failures, no automatic redirect following, and a response-size limit. A request is sent only when its explicit transport method is called. It returns a bounded transport response; status mapping and XML parsing belong to the next milestone.
 
 FreeFind result fields are documented as HTML and may contain highlight markup. The eventual package result model will keep safe plain text separate from explicitly raw, untrusted fields; do not render remote XML values as trusted HTML.

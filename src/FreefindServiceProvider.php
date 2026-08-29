@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Freefind\Freefind;
 
 use Freefind\Freefind\Configuration\FreefindConfig;
+use Freefind\Freefind\Configuration\HttpSettings;
 use Freefind\Freefind\Configuration\SpiderSettings;
+use Freefind\Freefind\Contracts\SearchTransport;
 use Freefind\Freefind\Http\Middleware\AddFreefindAnnotations;
 use Freefind\Freefind\Http\Middleware\DetectFreefindSpider;
 use Freefind\Freefind\Markup\AnnotationCollector;
@@ -13,6 +15,7 @@ use Freefind\Freefind\Markup\HtmlCommentEscaper;
 use Freefind\Freefind\Markup\MarkupState;
 use Freefind\Freefind\Markup\Renderer;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
+use Freefind\Freefind\Search\Xml\Transport\LaravelXmlSearchTransport;
 use Freefind\Freefind\View\Components\SearchForm;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
@@ -56,8 +59,15 @@ class FreefindServiceProvider extends PackageServiceProvider
         $this->app->bind(SpiderSettings::class, fn(Application $app): SpiderSettings => $app->make(
             FreefindConfig::class,
         )->spider);
+        $this->app->bind(HttpSettings::class, fn(Application $app): HttpSettings => $app->make(
+            FreefindConfig::class,
+        )->http);
         $this->app->bind(HostedSearch::class, fn(Application $app): HostedSearch => new HostedSearch(
             $app->make(FreefindConfig::class)->account,
+        ));
+        $this->app->bind(LaravelXmlSearchTransport::class);
+        $this->app->bind(SearchTransport::class, fn(Application $app): SearchTransport => $app->make(
+            LaravelXmlSearchTransport::class,
         ));
 
         $this->app->singleton(HtmlCommentEscaper::class);
