@@ -73,6 +73,19 @@ Freefind::assertSearched(fn (SentSearch $search): bool =>
 
 The fake records query text, selected sections, offset, and page size, and returns the fixture through the same response parser used by the real client. It is test support only; application code should continue to call the client explicitly with a user-initiated query.
 
+## Optional live contract check
+
+The `live-contract` Pest test is skipped unless all of these environment values are supplied for one deliberate operator run:
+
+```bash
+FREEFIND_LIVE_CONTRACT=1 \
+FREEFIND_SITE_ID=3225682 \
+FREEFIND_LIVE_QUERY='blade directives' \
+vendor/bin/pest --group=live-contract
+```
+
+Use a subscribed regular Page Search account and a controlled, non-sensitive query. The test performs one request against the default HTTPS XML endpoint, accepts a successful zero-result response, and is never part of normal or scheduled CI. Do not set these variables for automated builds.
+
 ## Executing a search
 
 Build the request from the caller's validated, user-entered query and invoke the XML client explicitly:
