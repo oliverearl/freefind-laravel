@@ -6,6 +6,7 @@ This catalogue is the user-facing guide to the FreeFind Laravel package. The pac
 
 - [Configuration and spider handling](configuration.md) — site IDs, HTTPS endpoints, HTTP limits, opt-in spider middleware, and request safety.
 - [Migration guide](migration.md) — map legacy FreeFind snippets and hosted forms to package APIs.
+- [Support and upgrades](support-and-upgrades.md) — runtime support, external-service boundaries, and contract-change guidance.
 - [Troubleshooting](troubleshooting.md) — indexing, response optimization, middleware, account, and XML failures.
 
 ## Integrations
