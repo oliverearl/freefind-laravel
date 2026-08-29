@@ -1,8 +1,9 @@
 # FreeFind Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/freefind/freefind-laravel.svg?style=flat-square)](https://packagist.org/packages/freefind/freefind-laravel)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/freefind/freefind-laravel/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/freefind/freefind-laravel/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/freefind/freefind-laravel.svg?style=flat-square)](https://packagist.org/packages/freefind/freefind-laravel)
+[![Tests](https://img.shields.io/github/actions/workflow/status/oliverearl/freefind-laravel/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/oliverearl/freefind-laravel/actions/workflows/run-tests.yml?query=branch%3Amain)
+[![License](https://img.shields.io/github/license/oliverearl/freefind-laravel?style=flat-square)](LICENSE.md)
+
+> **Independent third-party project — no FreeFind affiliation.** This project is created and maintained independently by Oliver Earl. It is not created by, affiliated with, sponsored by, endorsed by, approved by, or maintained by FreeFind.com or any of its owners, authors, employees, or affiliates. “FreeFind” and “FreeFind.com” are used only to identify the external service this package interoperates with; they remain their owners’ trademarks. FreeFind service, website, documentation, search results, and other third-party materials remain the property of their respective rightsholders. See [NOTICE](NOTICE.md) before reusing any upstream material.
 
 Laravel-native integrations for FreeFind Page Search:
 
@@ -11,14 +12,16 @@ Laravel-native integrations for FreeFind Page Search:
 - opt-in spider context and route annotations; and
 - a typed, bounded XML client for subscribed regular Page Search accounts.
 
-The package does not crawl sites, build a local index, configure the FreeFind Control Center, register application routes/controllers, or implement DataSearch. The first supported release is the complete `1.0.0`; internal development milestones are not published prereleases.
+The package does not crawl sites, build a local index, configure the FreeFind Control Center, register application routes/controllers, or implement DataSearch. It is currently pre-release: no Packagist package or supported release has been published. The first supported release, when ready, will be the complete `1.0.0`.
 
 Read the [documentation catalogue](docs/README.md) for installation, integration guides, migration, troubleshooting, and project reference material.
 
-## Installation
+## Installation after the first release
+
+This repository is available for review and contribution, but it is not yet published to Packagist or supported for production use. After `1.0.0` is released, install it with:
 
 ```bash
-composer require freefind/freefind-laravel
+composer require oliverearl/freefind-laravel:^1.0
 php artisan vendor:publish --tag=freefind-laravel-config
 ```
 
@@ -68,7 +71,7 @@ FreeFind must crawl the page again before changed annotations affect its index. 
 The XML feed is a subscribed regular Page Search feature. FreeFind documents it for a user-entered query, not for scheduled, robotic, bulk, speculative, queued, or prefetch work. The package exposes an explicit terminal call and leaves the application responsible for its route, validation, authorization, rate limiting, and error UX:
 
 ```php
-use Freefind\Freefind\Freefind;
+use Freefind\Freefind\Facades\Freefind;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -80,8 +83,7 @@ final class SearchController
             'q' => ['required', 'string', 'max:200'],
         ]);
 
-        $results = app(Freefind::class)
-            ->search($validated['q'])
+        $results = Freefind::search($validated['q'])
             ->get();
 
         return view('search.results', compact('results'));
@@ -89,7 +91,7 @@ final class SearchController
 }
 ```
 
-Only `get()` performs the request. The immutable builder supports sections, relevance/date sorting, page size, and offset. Advanced and refined requests use `app(Freefind::class)->xml()->execute(...)` with typed request objects. Package-owned result components are semantic and unstyled:
+Only `get()` performs the request. The immutable builder supports sections, relevance/date sorting, page size, and offset. Advanced and refined requests use `Freefind::xml()->execute(...)` with typed request objects. Package-owned result components are semantic and unstyled:
 
 ```blade
 <x-freefind::results :results="$results" />
@@ -127,8 +129,12 @@ vendor/bin/pest --group=live-contract
 
 ## Planning and upstream references
 
-The [planning pack](docs/planning/README.md) records accepted design decisions, the capability map, architecture, and delivery state. The downloaded [FreeFind documentation](docs/freefind/README.md) is an immutable research snapshot and remains the source for legacy protocol details.
+The [planning pack](docs/planning/README.md) records accepted design decisions, the capability map, architecture, and delivery state. The downloaded [FreeFind documentation](docs/freefind/README.md) is an immutable research snapshot used for traceability. It is not authored by this project and is not licensed under this repository’s MIT license; see [NOTICE](NOTICE.md) for its attribution and the public-redistribution gate.
+
+## Contributing and security
+
+Read [CONTRIBUTING](CONTRIBUTING.md) before opening a pull request, [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) before participating, and [SECURITY](SECURITY.md) to report a vulnerability privately. General support and remote-service boundaries are documented in [docs/support-and-upgrades.md](docs/support-and-upgrades.md).
 
 ## License
 
-The MIT License. See [LICENSE](LICENSE.md).
+The MIT License applies to this project’s original code and documentation. It does not grant rights in FreeFind or other third-party material. See [LICENSE](LICENSE.md) and [NOTICE](NOTICE.md).

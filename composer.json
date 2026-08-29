@@ -1,6 +1,6 @@
 {
-    "name": "freefind/freefind-laravel",
-    "description": "Laravel-native integrations for FreeFind Page Search",
+    "name": "oliverearl/freefind-laravel",
+    "description": "Independent Laravel integration for FreeFind Page Search",
     "keywords": [
         "Freefind",
         "laravel",
@@ -8,6 +8,10 @@
     ],
     "homepage": "https://github.com/oliverearl/freefind-laravel",
     "license": "MIT",
+    "support": {
+        "issues": "https://github.com/oliverearl/freefind-laravel/issues",
+        "source": "https://github.com/oliverearl/freefind-laravel"
+    },
     "authors": [
         {
             "name": "Oliver Earl",

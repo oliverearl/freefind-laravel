@@ -1,17 +1,19 @@
 # Support and upgrades
 
-The first supported package release is `1.0.0`. The supported runtime boundary is PHP 8.4 or newer within the package constraint and Laravel 11 or 12. The test matrix covers PHP 8.4 and 8.5, both Laravel majors, and lowest and stable dependency sets.
+This repository is pre-release. No Packagist package or supported release exists yet, and it should not be used in production. The first supported package release, when it is ready, will be `1.0.0`. Its intended runtime boundary is PHP 8.4 or newer within the package constraint and Laravel 11 or 12. The test matrix covers PHP 8.4 and 8.5, both Laravel majors, and lowest and stable dependency sets.
 
 After `1.0.0`, package changes follow semantic versioning. Review the changelog before upgrading, run the package checks in the application, and keep the package and Laravel versions within the declared Composer constraints:
 
 ```bash
-composer update freefind/freefind-laravel
+composer update oliverearl/freefind-laravel
 composer format
 composer analyse
 composer test
 ```
 
-## FreeFind service changes
+## Independent project and FreeFind service changes
+
+This is an independent third-party package and is not created by, affiliated with, sponsored by, endorsed by, approved by, or maintained by FreeFind.com or its authors, owners, employees, or affiliates. FreeFind controls its service, accounts, endpoints, documentation, and trademarks. The project’s MIT license applies only to project-owned work and grants no rights in FreeFind or other third-party material; see the repository [NOTICE](../NOTICE.md).
 
 The package implements the documented Page Search HTML and XML contracts captured in this repository's dated [upstream documentation snapshot](freefind/README.md). FreeFind controls the hosted endpoints, crawler behavior, account entitlements, response contents, and re-index timing. The package cannot guarantee availability or unchanged behavior for that external service.
 

@@ -1,6 +1,6 @@
 # FreeFind Laravel planning pack
 
-Status: accepted `1.0.0` direction; DataSearch implementation deferred to a later version
+Status: accepted `1.0.0` direction; DataSearch implementation deferred to a later version; public release additionally requires resolving the third-party documentation redistribution gate in [`NOTICE.md`](../../NOTICE.md)
 Research basis: the complete documentation snapshot in [`docs/freefind`](../freefind/README.md), downloaded on 29 August 2026
 
 This directory turns the legacy FreeFind contracts into a development plan for a modern Laravel package. The documents distinguish facts stated by FreeFind from recommendations made for this library.

@@ -148,6 +148,12 @@ Decision: provide meaningful descriptions for public classes, methods, and const
 
 Why: consumers need useful IDE and API guidance without repetitive noise, while array shapes, callable signatures, and failure behavior are otherwise easy to misunderstand.
 
+### D25 — Publish with an independent identity and explicit third-party boundaries
+
+Decision: publish under the independent Composer name `oliverearl/freefind-laravel`, not a FreeFind-controlled namespace. State prominently that the project is not created by, affiliated with, sponsored by, endorsed by, approved by, or maintained by FreeFind.com or its authors, owners, employees, or affiliates. Use “FreeFind” and “FreeFind.com” only to identify the external service the package interoperates with. Keep a root `NOTICE.md` that excludes FreeFind and other third-party material from the MIT license scope.
+
+Why: FreeFind's published policy identifies “FreeFind” and “FreeFind.com” as its trademarks and says its site content is copyrighted by FreeFind.com or its suppliers. Its service agreement says a subscription grants use of the service, not rights in FreeFind intellectual property. An independent package name, clear nominative use, and a distinct notice avoid suggesting an official relationship or a grant of third-party rights.
+
 ## Later DataSearch context
 
 What is already known from FreeFind's documentation:
