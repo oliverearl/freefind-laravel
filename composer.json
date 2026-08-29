@@ -1,6 +1,6 @@
 {
     "name": "freefind/freefind-laravel",
-    "description": "This is my package freefind-laravel",
+    "description": "Laravel-native integrations for FreeFind Page Search",
     "keywords": [
         "Freefind",
         "laravel",
