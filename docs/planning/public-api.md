@@ -1,6 +1,6 @@
-# Proposed public API
+# Public API reference
 
-This is a design sketch for naming and usability, not a compatibility commitment. Exact class namespaces may change during implementation, but the examples define the intended developer experience.
+This document records the implemented release-candidate API for the complete `1.0.0` scope. The package is not published as a partial `0.x` release; public changes before `1.0.0` may still be made directly because the exploratory API has no compatibility weight.
 
 ## Installation and minimal hosted search
 
@@ -147,6 +147,8 @@ Recommended registration policy: aliases are always registered, while global exe
 ## Hosted URL generation
 
 ```php
+use Freefind\Freefind\Facades\Freefind;
+
 $url = Freefind::hostedSearch()
     ->url(query: 'laravel middleware', sections: ['manuals']);
 ```
@@ -159,13 +161,14 @@ Freefind::hostedSearch()->whatsNewUrl();
 Freefind::hostedSearch()->indexUrl();
 ```
 
-These helpers should be shipped only after their parameter contracts are covered by a fixture or verified sample. A generic `url(array $parameters)` escape hatch can exist but is marked low-level.
+These helpers are implemented with validated parameter contracts. There is no generic parameter-array escape hatch; callers should use the typed builders.
 
 ## XML search client
 
 ### Laravel-friendly query builder
 
 ```php
+use Freefind\Freefind\Facades\Freefind;
 use Freefind\Freefind\Search\Xml\Query\SortOrder;
 
 $results = Freefind::search($request->string('q')->toString())
@@ -186,8 +189,9 @@ use Freefind\Freefind\Search\Xml\Query\AdvancedQuery;
 use Freefind\Freefind\Search\Xml\Request\SearchOptions;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 
-$results = Freefind::xml()->execute(new XmlSearchRequest(
-    app(Freefind::class)->account(),
+$freefind = app(Freefind::class);
+$results = $freefind->xml()->execute(new XmlSearchRequest(
+    $freefind->account(),
     new AdvancedQuery(
         allWords: 'laravel package',
         exactPhrase: 'blade directive',
@@ -206,8 +210,9 @@ use Freefind\Freefind\Search\Xml\Query\RefinedQuery;
 use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 
-$results = Freefind::xml()->execute(new XmlSearchRequest(
-    app(Freefind::class)->account(),
+$freefind = app(Freefind::class);
+$results = $freefind->xml()->execute(new XmlSearchRequest(
+    $freefind->account(),
     new RefinedQuery(new SimpleQuery('middleware'), 'laravel'),
 ));
 ```
@@ -251,13 +256,17 @@ The injected client represents the configured Page Search account. A future name
 
 ## Result objects
 
-Illustrative read-only shape:
+Implemented read-only result-model shape:
 
 ```php
 final readonly class SearchResults
 {
-    /** @param list<SearchResult> $items */
+    /**
+     * @param list<string> $sections
+     * @param list<SearchResult> $items
+     */
     public function __construct(
+        public FreefindStatus $status,
         public string $query,
         public int $total,
         public int $returned,
@@ -278,7 +287,7 @@ final readonly class SearchResult
         public ?int $number,
         public string $title,
         public string $description,
-        public Uri $url,
+        public AbsoluteUrl $url,
         public ?string $target,
         public string $displayUrl,
         public ?DateTimeInterface $date,
@@ -327,12 +336,16 @@ The application builds its own pagination links rather than rendering FreeFind's
 
 ## Testing API
 
-The package should provide an ergonomic fake without replacing Laravel's normal HTTP fake:
+The package provides an ergonomic fake without replacing Laravel's normal HTTP fake:
 
 ```php
+use Freefind\Freefind\Facades\Freefind;
+use Freefind\Freefind\Testing\SearchFixture;
+use Freefind\Freefind\Testing\SentSearch;
+
 Freefind::fake([
     SearchFixture::for('blade directives')->fromFile(
-        base_path('tests/Fixtures/freefind/success.xml'),
+        base_path('tests/Fixtures/xml/success.xml'),
     ),
 ]);
 
@@ -351,5 +364,5 @@ Lower-level tests can continue to use `Http::fake()` and the XML parser directly
 - PHP uses `Freefind`, matching the service's current package namespace; user-facing prose uses “FreeFind.”
 - Blade directives use a `freefind` prefix and paired directives have symmetrical names.
 - Avoid abbreviations such as `q1`, `nret`, or `srt` outside the encoder/parser layer.
-- Methods describe behavior (`noIndexPage`, `sortByDate`) rather than legacy syntax.
+- Methods describe behavior (`noIndexPage`, `sortBy`) rather than legacy syntax.
 - APIs that accept raw HTML include `Trusted` or `Raw` in the type/method name.

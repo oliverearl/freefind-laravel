@@ -4,11 +4,11 @@
 
 Build vertical internal slices, but do not publish partial `0.x` releases. Generated markup and XML fixtures are the contracts; Blade components sit on top only after those contracts are stable. The first published package is the complete `1.0.0`.
 
-Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, sequential-request isolation coverage, typed XML request core/bounded transport, secure typed response parsing, the explicit user-initiated XML client call, semantic unstyled XML result components, immutable simple-query builder ergonomics, fixture-backed package fake/assertion support, a skipped-by-default live-contract harness, adoption-focused release documentation, extracted Blade registration, shared browsing-context validation, complete public API PHPDoc and static-analysis generics, suffixed exception names, and the user-facing support/upgrade boundary are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
+Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, sequential-request isolation coverage, typed XML request core/bounded transport, secure typed response parsing, the explicit user-initiated XML client call, semantic unstyled XML result components, immutable simple-query builder ergonomics, fixture-backed package fake/assertion support, a skipped-by-default live-contract harness, adoption-focused release documentation, extracted Blade registration, shared browsing-context validation, complete public API PHPDoc and static-analysis generics, suffixed exception names, the user-facing support/upgrade boundary, the cross-version matrix, the final public-API review, and a network-enabled dependency audit are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
 
-Next: complete the final public-API review; rerun the dependency audit from a network-enabled environment; and run the live-contract check only when an operator supplies a subscribed account/query.
+Next: run the live-contract check and acquire representative remote fixtures only when an operator supplies a subscribed account/query.
 
-Validation: the configured PHP 8.4/8.5 × Laravel 11/12 × lowest/stable matrix passes in disposable copies. The normal suite remains network-free; remote fixture acquisition and live verification are still pending.
+Validation: the configured PHP 8.4/8.5 × Laravel 11/12 × lowest/stable matrix passes in disposable copies, and the current dependency set reports no Composer security advisories. The normal suite remains network-free; remote fixture acquisition and live verification are still pending.
 
 ## Milestone 0 — decisions and contract fixtures
 

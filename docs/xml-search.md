@@ -60,7 +60,7 @@ use Freefind\Freefind\Testing\SentSearch;
 
 Freefind::fake([
     SearchFixture::for('blade directives')->fromFile(
-        base_path('tests/Fixtures/freefind/success.xml'),
+        base_path('tests/Fixtures/xml/success.xml'),
     ),
 ]);
 
