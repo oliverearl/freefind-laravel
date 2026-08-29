@@ -7,6 +7,7 @@ use Freefind\Freefind\Http\Middleware\DetectFreefindSpider;
 use Freefind\Freefind\Contracts\SearchTransport;
 use Freefind\Freefind\Contracts\XmlResponseParser;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
+use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\Response\FreefindXmlResponseParser;
 use Freefind\Freefind\Search\Xml\Transport\LaravelXmlSearchTransport;
 use Illuminate\Contracts\Http\Kernel;
@@ -26,6 +27,7 @@ it('registers the spider middleware as an opt-in alias without pushing it global
         ->and(resolve(HostedSearch::class))->toBeInstanceOf(HostedSearch::class)
         ->and(resolve(SearchTransport::class))->toBeInstanceOf(LaravelXmlSearchTransport::class)
         ->and(resolve(XmlResponseParser::class))->toBeInstanceOf(FreefindXmlResponseParser::class)
+        ->and(resolve(FreefindXmlClient::class))->toBeInstanceOf(FreefindXmlClient::class)
         ->and(app(BladeCompiler::class)->getClassComponentAliases())
         ->toHaveKey('freefind::search-form');
 });

@@ -16,6 +16,7 @@ use Freefind\Freefind\Markup\HtmlCommentEscaper;
 use Freefind\Freefind\Markup\MarkupState;
 use Freefind\Freefind\Markup\Renderer;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
+use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\Transport\LaravelXmlSearchTransport;
 use Freefind\Freefind\Search\Xml\Response\FreefindXmlResponseParser;
 use Freefind\Freefind\View\Components\SearchForm;
@@ -75,6 +76,7 @@ class FreefindServiceProvider extends PackageServiceProvider
         $this->app->bind(XmlResponseParser::class, fn(Application $app): XmlResponseParser => $app->make(
             FreefindXmlResponseParser::class,
         ));
+        $this->app->bind(FreefindXmlClient::class);
 
         $this->app->singleton(HtmlCommentEscaper::class);
         $this->app->bind(MarkupState::class, function (Application $app): MarkupState {

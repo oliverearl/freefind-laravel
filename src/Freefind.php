@@ -7,6 +7,7 @@ namespace Freefind\Freefind;
 use Freefind\Freefind\Configuration\Account;
 use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
+use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Spider\SpiderContext;
 
 final class Freefind
@@ -15,6 +16,7 @@ final class Freefind
         private readonly FreefindConfig $config,
         private readonly SpiderContext $spiderContext,
         private readonly HostedSearch $hostedSearch,
+        private readonly FreefindXmlClient $xmlClient,
     ) {}
 
     public function account(): Account
@@ -35,5 +37,10 @@ final class Freefind
     public function hostedSearch(): HostedSearch
     {
         return $this->hostedSearch;
+    }
+
+    public function xml(): FreefindXmlClient
+    {
+        return $this->xmlClient;
     }
 }
