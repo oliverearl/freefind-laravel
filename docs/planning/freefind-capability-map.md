@@ -114,6 +114,10 @@ The feed is `GET https://search.freefind.com/find.xml`, available only to subscr
 
 The reference labels several response strings as “HTML.” Titles and descriptions in the example contain `<b>` highlights. They must not become Laravel `HtmlString` instances automatically. Default package views escape or render sanitized text; any raw/highlighted accessor must be unmistakably opt-in.
 
+### Verified live observations
+
+On 2026-08-29, one deliberate live-contract trial used site ID `56428610` and the operator-supplied query `Uses`. FreeFind's XML endpoint was reachable, but the response reported the unauthorized-feed status, which the package mapped to `UnauthorizedXmlFeedException`. This confirms transport reachability and status mapping only; it does not establish a successful response shape or provide a contract fixture. A subscribed Page Search account or XML access enabled for this site is required before repeating the trial.
+
 ## Source discrepancies and ambiguities
 
 These should become fixtures or live-contract questions, not silent assumptions:
