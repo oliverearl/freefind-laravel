@@ -23,7 +23,7 @@ final readonly class FreefindConfig
     /**
      * Builds package configuration and validates each nested configuration section.
      *
-     * @param  array<string, mixed>  $config
+     * @param array<string, mixed> $config
      *
      * @throws InvalidConfigurationException When a nested configuration section is not an array or contains an invalid value.
      */

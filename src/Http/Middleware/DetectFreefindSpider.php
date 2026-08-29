@@ -33,7 +33,7 @@ final class DetectFreefindSpider
     /**
      * Stores request-scoped detection state and applies cache policy after the response is built.
      *
-     * @param  Closure(Request): mixed  $next
+     * @param Closure(Request): mixed $next
      */
     public function handle(Request $request, Closure $next): mixed
     {

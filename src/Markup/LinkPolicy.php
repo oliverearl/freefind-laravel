@@ -46,7 +46,7 @@ final readonly class LinkPolicy
     /**
      * Validates one policy value against the values supported for its field.
      *
-     * @param  list<string>  $allowed
+     * @param list<string> $allowed
      *
      * @throws InvalidMarkupException When a non-null value is not in the allowed list.
      */

@@ -52,7 +52,7 @@ final readonly class HttpSettings
     /**
      * Builds transport settings from the package configuration array.
      *
-     * @param  array<string, mixed>  $config
+     * @param array<string, mixed> $config
      *
      * @throws InvalidConfigurationException When a configured value is not an integer or violates the limits.
      */
@@ -68,7 +68,7 @@ final readonly class HttpSettings
     /**
      * Reads one integer setting while preserving the configured default when it is absent.
      *
-     * @param  array<string, mixed>  $config
+     * @param array<string, mixed> $config
      *
      * @throws InvalidConfigurationException When the configured value is not an integer.
      */

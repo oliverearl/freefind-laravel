@@ -14,7 +14,7 @@ final readonly class SpiderSettings
     /**
      * Creates validated spider-detection settings.
      *
-     * @param  list<string>  $userAgents  Case-insensitive user-agent fragments to recognize.
+     * @param list<string> $userAgents  Case-insensitive user-agent fragments to recognize.
      *
      * @throws InvalidConfigurationException When no signatures, invalid signatures, or an empty cache policy is provided.
      */
@@ -41,7 +41,7 @@ final readonly class SpiderSettings
     /**
      * Builds spider settings from the package configuration array.
      *
-     * @param  array<string, mixed>  $config
+     * @param array<string, mixed> $config
      *
      * @throws InvalidConfigurationException When a configured value has the wrong type or violates the settings contract.
      */

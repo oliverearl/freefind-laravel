@@ -23,7 +23,7 @@ final readonly class HostedSearch
     /**
      * Builds a hosted search URL for a query and optional sections or display flags.
      *
-     * @param  list<string>  $sections
+     * @param list<string> $sections
      *
      * @throws InvalidMarkupException When a section, language, query, or generated URL is invalid.
      */
@@ -74,7 +74,8 @@ final readonly class HostedSearch
     /**
      * Produces the ordered fields used by the hosted search form or URL.
      *
-     * @param  list<string>  $sections
+     * @param list<string> $sections
+     *
      * @return list<array{0: string, 1: string}>
      *
      * @throws InvalidMarkupException When a section, language, or query is invalid.
@@ -114,7 +115,7 @@ final readonly class HostedSearch
     /**
      * Appends ordered fields to the configured hosted-search endpoint.
      *
-     * @param  list<array{0: string, 1: string}>  $pairs
+     * @param list<array{0: string, 1: string}> $pairs
      *
      * @throws InvalidMarkupException When the generated URL is invalid.
      */
@@ -126,7 +127,7 @@ final readonly class HostedSearch
     /**
      * Appends ordered fields to a configured account endpoint.
      *
-     * @param  list<array{0: string, 1: string}>  $pairs
+     * @param list<array{0: string, 1: string}> $pairs
      *
      * @throws InvalidMarkupException When the generated URL is invalid.
      */

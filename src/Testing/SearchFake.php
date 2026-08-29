@@ -29,7 +29,7 @@ final class SearchFake implements SearchTransport
     /**
      * Creates a fake transport from unique, loaded search fixtures.
      *
-     * @param  list<mixed>  $fixtures
+     * @param list<mixed> $fixtures
      *
      * @throws InvalidSearchRequestException When an entry is not a loaded fixture or queries are duplicated.
      */
@@ -71,7 +71,7 @@ final class SearchFake implements SearchTransport
     /**
      * Asserts that at least one recorded search satisfies the supplied predicate.
      *
-     * @param  Closure(SentSearch): bool  $predicate
+     * @param Closure(SentSearch): bool $predicate
      *
      * @throws RuntimeException When no recorded search satisfies the predicate.
      */

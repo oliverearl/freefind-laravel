@@ -90,7 +90,7 @@ final class Freefind
     /**
      * Replaces the XML transport with fixture-backed responses for package tests.
      *
-     * @param  list<SearchFixture>  $fixtures
+     * @param list<SearchFixture> $fixtures
      *
      * @throws InvalidSearchRequestException When fixtures are invalid, empty, or duplicated by query.
      */
@@ -106,7 +106,7 @@ final class Freefind
     /**
      * Asserts that a recorded fake search satisfies a caller-provided predicate.
      *
-     * @param  Closure(\Freefind\Freefind\Testing\SentSearch): bool  $predicate
+     * @param Closure(\Freefind\Freefind\Testing\SentSearch): bool $predicate
      *
      * @throws InvalidSearchRequestException When no fake transport has been configured.
      * @throws \RuntimeException When no recorded search satisfies the predicate.

@@ -14,7 +14,7 @@ final readonly class XmlTransportResponse
     /**
      * Creates a response value with normalized header lists.
      *
-     * @param  array<string, list<string>>  $headers
+     * @param array<string, list<string>> $headers
      *
      * @throws SearchTransportException When the HTTP status is outside the valid range.
      */

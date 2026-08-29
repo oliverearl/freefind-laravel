@@ -21,7 +21,7 @@ final readonly class Keywords
     /**
      * Creates a validated keyword list and relevance weight.
      *
-     * @param  array<array-key, mixed>  $words  Values are validated as an ordered list of safe, non-empty strings.
+     * @param array<array-key, mixed> $words  Values are validated as an ordered list of safe, non-empty strings.
      *
      * @throws InvalidMarkupException When the list or weight is outside the supported range or contains unsafe text.
      */
@@ -55,7 +55,7 @@ final readonly class Keywords
     /**
      * Creates keywords, defaulting the weight to the number of supplied words.
      *
-     * @param  array<array-key, mixed>  $words  Values are validated as an ordered list of safe, non-empty strings.
+     * @param array<array-key, mixed> $words  Values are validated as an ordered list of safe, non-empty strings.
      *
      * @throws InvalidMarkupException When a word or the derived weight is invalid.
      */

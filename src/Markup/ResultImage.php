@@ -14,8 +14,8 @@ final readonly class ResultImage
     /**
      * Creates an image annotation value with constrained HTML and link attributes.
      *
-     * @param  array<string, mixed>  $attributes  Allowed image attribute names; values are validated as scalar.
-     * @param  array<string, mixed>  $linkAttributes  Allowed linked-image attribute names; values are validated as scalar.
+     * @param array<string, mixed> $attributes  Allowed image attribute names; values are validated as scalar.
+     * @param array<string, mixed> $linkAttributes  Allowed linked-image attribute names; values are validated as scalar.
      *
      * @throws InvalidMarkupException When an image value, dimension, target, or attribute is unsafe or invalid.
      */
@@ -46,8 +46,8 @@ final readonly class ResultImage
     /**
      * Creates an image annotation from URL strings or existing absolute-URL values.
      *
-     * @param  array<string, mixed>  $attributes  Allowed image attribute names; values are validated as scalar.
-     * @param  array<string, mixed>  $linkAttributes  Allowed linked-image attribute names; values are validated as scalar.
+     * @param array<string, mixed> $attributes  Allowed image attribute names; values are validated as scalar.
+     * @param array<string, mixed> $linkAttributes  Allowed linked-image attribute names; values are validated as scalar.
      *
      * @throws InvalidMarkupException When an image value, dimension, target, or attribute is unsafe or invalid.
      */
@@ -88,8 +88,8 @@ final readonly class ResultImage
     /**
      * Validates linked-image attributes against the supported names and scalar values.
      *
-     * @param  array<string, mixed>  $attributes
-     * @param  list<string>  $allowed
+     * @param array<string, mixed> $attributes
+     * @param list<string> $allowed
      *
      * @throws InvalidMarkupException When an attribute name or value is not permitted.
      */

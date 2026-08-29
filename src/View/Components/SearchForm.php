@@ -20,7 +20,7 @@ final class SearchForm extends Component
     /**
      * Creates a hosted-search form with validated labels, sections, and browser target.
      *
-     * @param  array<array-key, mixed>  $sections  Map of FreeFind section IDs to display labels; entries are validated at runtime.
+     * @param array<array-key, mixed> $sections Map of FreeFind section IDs to display labels; entries are validated at runtime.
      *
      * @throws InvalidMarkupException When a form value is unsafe or invalid.
      */

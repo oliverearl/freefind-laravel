@@ -46,7 +46,7 @@ final readonly class Account
     /**
      * Builds an account from the package configuration array.
      *
-     * @param  array<string, mixed>  $config
+     * @param array<string, mixed> $config
      *
      * @throws InvalidConfigurationException When a site ID, endpoint map, or endpoint value is invalid.
      */
@@ -109,7 +109,7 @@ final readonly class Account
     /**
      * Reads one endpoint from the configuration, falling back to its documented default.
      *
-     * @param  array<string, mixed>  $endpoints
+     * @param array<string, mixed> $endpoints
      *
      * @throws InvalidConfigurationException When the configured endpoint is not a string.
      */

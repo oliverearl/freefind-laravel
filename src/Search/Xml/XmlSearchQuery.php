@@ -33,7 +33,7 @@ final readonly class XmlSearchQuery
     /**
      * Returns a copy restricted to the supplied FreeFind sections.
      *
-     * @param  list<string>  $sections
+     * @param list<string> $sections
      *
      * @throws InvalidSearchRequestException When a section identifier is invalid or repeated.
      */
@@ -96,7 +96,7 @@ final readonly class XmlSearchQuery
     /**
      * Returns a copy with the supplied non-null options replacing the current values.
      *
-     * @param  list<string>|null  $sections
+     * @param list<string>|null $sections
      *
      * @throws InvalidSearchRequestException When the resulting options are invalid.
      */

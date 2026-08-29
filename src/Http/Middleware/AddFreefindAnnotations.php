@@ -37,7 +37,7 @@ final class AddFreefindAnnotations
     /**
      * Collects the route's annotations and passes the request onward.
      *
-     * @param  Closure(Request): mixed  $next
+     * @param Closure(Request): mixed $next
      *
      * @throws InvalidMarkupException When a route annotation name is unsupported.
      */
@@ -54,7 +54,8 @@ final class AddFreefindAnnotations
     /**
      * Expands comma-separated route middleware arguments into unique annotation names.
      *
-     * @param  list<string>  $annotations
+     * @param list<string> $annotations
+     *
      * @return list<string>
      *
      * @throws InvalidMarkupException When an annotation name is unsupported.

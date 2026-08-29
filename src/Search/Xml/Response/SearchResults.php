@@ -14,8 +14,8 @@ final readonly class SearchResults
     /**
      * Creates a response model with normalized sections, results, and pagination.
      *
-     * @param  list<string>  $sections
-     * @param  list<SearchResult>  $items
+     * @param list<string> $sections
+     * @param list<SearchResult> $items
      *
      * @throws InvalidSearchRequestException When a result count or offset is negative.
      */

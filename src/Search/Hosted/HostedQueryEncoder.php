@@ -14,7 +14,7 @@ final class HostedQueryEncoder
     /**
      * Encodes ordered key/value pairs without collapsing repeated keys.
      *
-     * @param  list<array{0: string, 1: string}>  $pairs
+     * @param list<array{0: string, 1: string}> $pairs
      *
      * @throws InvalidMarkupException When a key or value contains invalid UTF-8 or control characters.
      */

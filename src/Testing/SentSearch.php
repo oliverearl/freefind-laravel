@@ -17,7 +17,7 @@ final readonly class SentSearch
     /**
      * Creates a recorded-search summary.
      *
-     * @param  list<string>  $sections
+     * @param list<string> $sections
      */
     public function __construct(
         public string $query,

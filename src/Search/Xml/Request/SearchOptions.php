@@ -18,7 +18,7 @@ final readonly class SearchOptions
     /**
      * Creates validated search options and pagination bounds.
      *
-     * @param  array<array-key, mixed>  $sections  Values are validated as ordered section identifiers.
+     * @param array<array-key, mixed> $sections  Values are validated as ordered section identifiers.
      *
      * @throws InvalidSearchRequestException When pagination or a section identifier is invalid.
      */
