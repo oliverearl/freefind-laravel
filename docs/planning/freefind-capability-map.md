@@ -81,7 +81,7 @@ The feed is `GET https://search.freefind.com/find.xml`, available only to subscr
 | `si` | Required site/account ID; documented as string. | Connection-owned non-empty string. |
 | `query` | Simple words or Boolean expression; one value. | `SimpleQuery`; mutually exclusive with `q1`–`q4`. |
 | `q1` | All words. Ignored when `query` exists. | `AdvancedQuery::allWords`. |
-| `q2` | Exact phrase. Ignored when `query` exists. | `AdvancedQuery::phrase`. |
+| `q2` | Exact phrase. Ignored when `query` exists. | `AdvancedQuery::exactPhrase`. |
 | `q3` | Any word. Ignored when `query` exists. | `AdvancedQuery::anyWords`. |
 | `q4` | Excluded words. Ignored when `query` exists. | `AdvancedQuery::withoutWords`. |
 | `asen`, `csen` | `y`/`n`, default `n`. | Booleans serialized explicitly only when non-default. |

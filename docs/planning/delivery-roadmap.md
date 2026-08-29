@@ -4,9 +4,9 @@
 
 Build vertical internal slices, but do not publish partial `0.x` releases. Generated markup and XML fixtures are the contracts; Blade components sit on top only after those contracts are stable. The first published package is the complete `1.0.0`.
 
-Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, and sequential-request isolation coverage are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
+Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, sequential-request isolation coverage, and the typed XML request core are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
 
-Next: complete the Laravel 11/12 middleware compatibility check, then begin Milestone 4 with local XML request/response fixtures; keep remote contract acquisition pending until an operator supplies a subscribed account/query.
+Next: add the bounded XML transport and tolerant response parser against local fixtures; keep remote contract acquisition pending until an operator supplies a subscribed account/query.
 
 ## Milestone 0 — decisions and contract fixtures
 

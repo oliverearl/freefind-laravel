@@ -11,7 +11,7 @@ Laravel-native integrations for FreeFind Page Search: secure crawler annotations
 
 The research-backed product scope, FreeFind capability map, proposed architecture, public API, delivery roadmap, and open decisions are collected in the [project planning pack](docs/planning/README.md).
 
-Current implementation guides: [configuration and spider handling](docs/configuration.md), [hosted search](docs/hosted-search.md), and [crawler markup](docs/markup.md).
+Current implementation guides: [configuration and spider handling](docs/configuration.md), [hosted search](docs/hosted-search.md), [crawler markup](docs/markup.md), and the [XML request-core boundary](docs/xml-search.md).
 
 ## Support us
 
