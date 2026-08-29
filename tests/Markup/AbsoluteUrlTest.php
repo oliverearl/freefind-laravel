@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Markup\AbsoluteUrl;
 
 it('accepts absolute HTTP and HTTPS URLs', function (): void {
@@ -14,7 +14,7 @@ it('accepts absolute HTTP and HTTPS URLs', function (): void {
 
 it('rejects unsafe or non-absolute URLs', function (string $url): void {
     expect(fn(): AbsoluteUrl => new AbsoluteUrl($url))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 })->with([
     'javascript:alert(1)',
     'data:text/html,hello',

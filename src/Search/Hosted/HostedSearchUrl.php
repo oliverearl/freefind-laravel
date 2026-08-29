@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Hosted;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class HostedSearchUrl
 {
@@ -20,7 +20,7 @@ final readonly class HostedSearchUrl
             || ($parts['user'] ?? null) !== null
             || ($parts['pass'] ?? null) !== null
         ) {
-            throw new InvalidMarkup('Hosted FreeFind URLs must use HTTPS without credentials.');
+            throw new InvalidMarkupException('Hosted FreeFind URLs must use HTTPS without credentials.');
         }
     }
 

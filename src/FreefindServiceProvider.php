@@ -20,19 +20,14 @@ use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\Transport\LaravelXmlSearchTransport;
 use Freefind\Freefind\Search\Xml\Response\FreefindXmlResponseParser;
-use Freefind\Freefind\View\Components\EmptyState;
-use Freefind\Freefind\View\Components\Pagination;
-use Freefind\Freefind\View\Components\ResultItem;
-use Freefind\Freefind\View\Components\Results;
-use Freefind\Freefind\View\Components\SearchForm;
-use Freefind\Freefind\View\Components\SpellingSuggestion;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
+use Freefind\Freefind\View\BladeRegistrar;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Blade;
 use Override;
+use RuntimeException;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -55,7 +50,7 @@ class FreefindServiceProvider extends PackageServiceProvider
             $config = $app->make('config')->get('freefind-laravel', []);
 
             if (! is_array($config)) {
-                throw new \RuntimeException('The freefind-laravel configuration must be an array.');
+                throw new RuntimeException('The freefind-laravel configuration must be an array.');
             }
 
             return FreefindConfig::fromConfig($config);
@@ -150,30 +145,9 @@ class FreefindServiceProvider extends PackageServiceProvider
     {
         parent::bootingPackage();
 
-        $this->app->make(Router::class)->aliasMiddleware('freefind.spider', DetectFreefindSpider::class);
-        $this->app->make(Router::class)->aliasMiddleware('freefind.annotate', AddFreefindAnnotations::class);
-        Blade::component(SearchForm::class, 'freefind::search-form');
-        Blade::component(Results::class, 'freefind::results');
-        Blade::component(ResultItem::class, 'freefind::result-item');
-        Blade::component(Pagination::class, 'freefind::pagination');
-        Blade::component(SpellingSuggestion::class, 'freefind::spelling-suggestion');
-        Blade::component(EmptyState::class, 'freefind::empty-state');
-
-        Blade::directive('freefindKeywords', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->keywords(\\Freefind\\Freefind\\Markup\\Keywords::from(' . $expression . ')); ?>');
-        Blade::directive('freefindDocumentDate', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->documentDate(\\Freefind\\Freefind\\Markup\\DocumentDate::from(' . $expression . ')); ?>');
-        Blade::directive('freefindNoIndexPage', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->noIndexPage(); ?>');
-        Blade::directive('freefindNoIndex', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->beginNoIndex(); ?>');
-        Blade::directive('endFreefindNoIndex', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->endNoIndex(); ?>');
-        Blade::directive('freefindNoFollow', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->beginNoFollow(); ?>');
-        Blade::directive('endFreefindNoFollow', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->endNoFollow(); ?>');
-        Blade::directive('freefindLinks', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->links(\\Freefind\\Freefind\\Markup\\ExplicitLinks::from(' . $expression . ')); ?>');
-        Blade::directive('freefindNoMap', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->noMap(); ?>');
-        Blade::directive('freefindMapTitle', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->mapTitle(\\Freefind\\Freefind\\Markup\\MapTitle::from(' . $expression . ')); ?>');
-        Blade::directive('freefindNotNew', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->notNew(); ?>');
-        Blade::directive('freefindWhatsNew', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->whatsNew(\\Freefind\\Freefind\\Markup\\WhatsNewEntry::from(' . $expression . ')); ?>');
-        Blade::directive('freefindResultImage', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->resultImage(\\Freefind\\Freefind\\Markup\\ResultImage::from(' . $expression . ')); ?>');
-        Blade::directive('freefindLinkPolicy', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->pageLinkPolicy(\\Freefind\\Freefind\\Markup\\LinkPolicy::from(' . $expression . ')); ?>');
-        Blade::directive('freefindGlobalLinkPolicy', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->globalLinkPolicy(\\Freefind\\Freefind\\Markup\\LinkPolicy::from(' . $expression . ')); ?>');
-        Blade::directive('freefindHead', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\AnnotationCollector::class)->render(); ?>');
+        $router = $this->app->make(Router::class);
+        $router->aliasMiddleware('freefind.spider', DetectFreefindSpider::class);
+        $router->aliasMiddleware('freefind.annotate', AddFreefindAnnotations::class);
+        $this->app->make(BladeRegistrar::class)->register();
     }
 }

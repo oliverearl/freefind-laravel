@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\View\Components;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Search\Xml\Response\SearchResults;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
@@ -36,12 +36,12 @@ final class Results extends Component
                 || preg_match('//u', $text) !== 1
                 || preg_match('/[\x00-\x1F\x7F]/', $text) === 1
             ) {
-                throw new InvalidMarkup('FreeFind result headings and empty-state messages must be non-empty valid text without control characters.');
+                throw new InvalidMarkupException('FreeFind result headings and empty-state messages must be non-empty valid text without control characters.');
             }
         }
 
         if (! preg_match('/^[A-Za-z][A-Za-z0-9_-]{0,63}$/', $this->headingId)) {
-            throw new InvalidMarkup('FreeFind result heading IDs must be valid HTML identifiers.');
+            throw new InvalidMarkupException('FreeFind result heading IDs must be valid HTML identifiers.');
         }
     }
 

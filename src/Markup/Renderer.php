@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
+use LogicException;
 use Illuminate\Support\Facades\Date;
 
 final class Renderer
@@ -127,6 +129,9 @@ final class Renderer
         return $this->comment('FreeFind Begin No Index');
     }
 
+    /**
+     * @throws InvalidMarkupException
+     */
     public function endNoIndex(): string
     {
         $this->state->end('no-index');
@@ -141,6 +146,9 @@ final class Renderer
         return $this->comment('FreeFind nofollow');
     }
 
+    /**
+     * @throws InvalidMarkupException
+     */
     public function endNoFollow(): string
     {
         $this->state->end('no-follow');
@@ -166,7 +174,7 @@ final class Renderer
                 'follow' => 'followScript',
                 'ignore-page' => 'noFollowScript',
                 'never' => 'neverFollowScript',
-                default => throw new \LogicException('The FreeFind script policy was not validated.'),
+                default => throw new LogicException('The FreeFind script policy was not validated.'),
             };
         }
 
@@ -174,7 +182,7 @@ final class Renderer
             $values[] = 'noRobotsTag';
         }
 
-        return implode("\n", array_map(
+        return implode(PHP_EOL, array_map(
             fn(string $value): string => '<meta name="FreeFind" content="' . $value . '">',
             $values,
         ));

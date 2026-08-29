@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
+use Illuminate\Support\Str;
 
 final class HtmlCommentEscaper
 {
     public static function assertSafe(string $value): void
     {
         if (preg_match('//u', $value) !== 1) {
-            throw new InvalidMarkup('FreeFind annotation values must be valid UTF-8.');
+            throw new InvalidMarkupException('FreeFind annotation values must be valid UTF-8.');
         }
 
         if (preg_match('/[\x00-\x1F\x7F]/', $value) === 1) {
-            throw new InvalidMarkup('FreeFind annotation values cannot contain control characters.');
+            throw new InvalidMarkupException('FreeFind annotation values cannot contain control characters.');
         }
 
-        if (str_contains($value, '--')) {
-            throw new InvalidMarkup('FreeFind annotation values cannot contain consecutive hyphens.');
+        if (Str::contains($value, '--')) {
+            throw new InvalidMarkupException('FreeFind annotation values cannot contain consecutive hyphens.');
         }
     }
 

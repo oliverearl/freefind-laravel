@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class MapTitle
 {
     public function __construct(public string $title)
     {
         if ($this->title === '') {
-            throw new InvalidMarkup('The FreeFind map title must not be empty.');
+            throw new InvalidMarkupException('The FreeFind map title must not be empty.');
         }
 
         HtmlCommentEscaper::assertSafe($this->title);

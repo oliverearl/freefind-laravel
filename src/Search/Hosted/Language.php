@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Hosted;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class Language
 {
@@ -18,14 +18,14 @@ final readonly class Language
     public function __construct(public string $code)
     {
         if (! preg_match('/^[a-z][a-z0-9_-]{1,7}$/', $this->code)) {
-            throw new InvalidMarkup('FreeFind language codes must be short lowercase identifiers.');
+            throw new InvalidMarkupException('FreeFind language codes must be short lowercase identifiers.');
         }
     }
 
     public static function fromCode(string $code): self
     {
         if (! in_array($code, self::SUPPORTED, true)) {
-            throw new InvalidMarkup("The FreeFind language [{$code}] is not documented as supported.");
+            throw new InvalidMarkupException("The FreeFind language [{$code}] is not documented as supported.");
         }
 
         return new self($code);

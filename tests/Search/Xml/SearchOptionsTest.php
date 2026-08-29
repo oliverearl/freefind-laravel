@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Xml\Query\DescriptionLength;
 use Freefind\Freefind\Search\Xml\Query\SortOrder;
 use Freefind\Freefind\Search\Xml\Query\Stemming;
@@ -35,8 +35,8 @@ it('encodes non-default XML search options in stable order', function (): void {
 
 it('omits defaults and rejects invalid XML option values', function (): void {
     expect((new SearchOptions())->pairs())->toBe([])
-        ->and(fn(): SearchOptions => new SearchOptions(offset: -1))->toThrow(InvalidSearchRequest::class)
-        ->and(fn(): SearchOptions => new SearchOptions(resultsPerPage: 26))->toThrow(InvalidSearchRequest::class)
-        ->and(fn(): SearchOptions => new SearchOptions(sections: ['web']))->toThrow(InvalidSearchRequest::class)
-        ->and(fn(): SearchOptions => new SearchOptions(sections: ['manuals', 'manuals']))->toThrow(InvalidSearchRequest::class);
+        ->and(fn(): SearchOptions => new SearchOptions(offset: -1))->toThrow(InvalidSearchRequestException::class)
+        ->and(fn(): SearchOptions => new SearchOptions(resultsPerPage: 26))->toThrow(InvalidSearchRequestException::class)
+        ->and(fn(): SearchOptions => new SearchOptions(sections: ['web']))->toThrow(InvalidSearchRequestException::class)
+        ->and(fn(): SearchOptions => new SearchOptions(sections: ['manuals', 'manuals']))->toThrow(InvalidSearchRequestException::class);
 });

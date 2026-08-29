@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Search\Hosted\HostedSearchUrl;
 
 it('represents a secure hosted search URL', function (): void {
@@ -14,7 +14,7 @@ it('represents a secure hosted search URL', function (): void {
 
 it('rejects insecure or credential-bearing hosted URLs', function (string $url): void {
     expect(fn(): HostedSearchUrl => new HostedSearchUrl($url))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 })->with([
     'http://search.freefind.com/find.html',
     'https://user:pass@search.freefind.com/find.html',

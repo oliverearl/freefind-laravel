@@ -6,4 +6,4 @@ namespace Freefind\Freefind\Exceptions;
 
 use RuntimeException;
 
-final class FreefindServiceError extends RuntimeException {}
+final class InvalidOrClosedAccountException extends RuntimeException {}

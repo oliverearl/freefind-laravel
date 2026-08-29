@@ -6,4 +6,4 @@ namespace Freefind\Freefind\Exceptions;
 
 use RuntimeException;
 
-final class InvalidOrClosedAccount extends RuntimeException {}
+final class MalformedXmlResponseException extends RuntimeException {}

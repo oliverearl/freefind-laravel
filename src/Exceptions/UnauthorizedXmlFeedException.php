@@ -6,4 +6,4 @@ namespace Freefind\Freefind\Exceptions;
 
 use RuntimeException;
 
-final class MalformedXmlResponse extends RuntimeException {}
+final class UnauthorizedXmlFeedException extends RuntimeException {}

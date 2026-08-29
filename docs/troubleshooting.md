@@ -16,12 +16,12 @@ Spider detection is opt-in. Use `freefind.spider` on the route group that needs 
 
 Confirm that the account is subscribed to the regular Page Search XML feature. Status errors are intentionally distinct:
 
-- `UnauthorizedXmlFeed`: the XML feed is not authorized for the account;
-- `InvalidOrClosedAccount`: the account is invalid or closed;
-- `RejectedSearchParameters`: FreeFind rejected the request parameters; and
-- `FreefindServiceError`: a generic or unknown service status was returned.
+- `UnauthorizedXmlFeedException`: the XML feed is not authorized for the account;
+- `InvalidOrClosedAccountException`: the account is invalid or closed;
+- `RejectedSearchParametersException`: FreeFind rejected the request parameters; and
+- `FreefindServiceException`: a generic or unknown service status was returned.
 
-`SearchTransportException` indicates an HTTP, timeout, redirect, or response-size problem. `MalformedXmlResponse` indicates that the bounded response was not a valid supported XML shape. The application should choose the user-facing message; exception messages do not include raw XML or remote `<msg>` content.
+`SearchTransportException` indicates an HTTP, timeout, redirect, or response-size problem. `MalformedXmlResponseException` indicates that the bounded response was not a valid supported XML shape. The application should choose the user-facing message; exception messages do not include raw XML or remote `<msg>` content.
 
 ## XML search is unexpectedly not sent
 

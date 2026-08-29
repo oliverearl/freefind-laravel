@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Request;
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Xml\Query\DescriptionLength;
 use Freefind\Freefind\Search\Xml\Query\SortOrder;
 use Freefind\Freefind\Search\Xml\Query\Stemming;
+use Illuminate\Support\Str;
 
 final readonly class SearchOptions
 {
@@ -25,26 +26,26 @@ final readonly class SearchOptions
         public Stemming $stemming = Stemming::Auto,
     ) {
         if ($this->offset < 0) {
-            throw new InvalidSearchRequest('FreeFind search offsets must not be negative.');
+            throw new InvalidSearchRequestException('FreeFind search offsets must not be negative.');
         }
 
         if ($this->resultsPerPage < 1 || $this->resultsPerPage > 25) {
-            throw new InvalidSearchRequest('FreeFind results per page must be between 1 and 25.');
+            throw new InvalidSearchRequestException('FreeFind results per page must be between 1 and 25.');
         }
 
         $seen = [];
 
         foreach ($this->sections as $section) {
             if (! is_string($section) || ! preg_match('/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/', $section)) {
-                throw new InvalidSearchRequest('FreeFind XML sections must be single-word identifiers.');
+                throw new InvalidSearchRequestException('FreeFind XML sections must be single-word identifiers.');
             }
 
-            if (strtolower($section) === 'web') {
-                throw new InvalidSearchRequest('The FreeFind XML client does not support web search sections.');
+            if (Str::lower($section) === 'web') {
+                throw new InvalidSearchRequestException('The FreeFind XML client does not support web search sections.');
             }
 
             if (in_array($section, $seen, true)) {
-                throw new InvalidSearchRequest('FreeFind XML sections must not be repeated.');
+                throw new InvalidSearchRequestException('FreeFind XML sections must not be repeated.');
             }
 
             $seen[] = $section;

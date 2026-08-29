@@ -6,4 +6,4 @@ namespace Freefind\Freefind\Exceptions;
 
 use RuntimeException;
 
-final class RejectedSearchParameters extends RuntimeException {}
+final class RejectedSearchParametersException extends RuntimeException {}

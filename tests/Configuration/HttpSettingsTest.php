@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\HttpSettings;
-use Freefind\Freefind\Exceptions\InvalidConfiguration;
+use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
 it('uses bounded conservative HTTP defaults', function (): void {
     $settings = new HttpSettings();
@@ -27,7 +27,7 @@ it('reads integer HTTP settings from configuration', function (): void {
 
 it('rejects invalid HTTP settings', function (int $connectTimeout, int $timeout, int $maxResponseBytes): void {
     expect(fn(): HttpSettings => new HttpSettings($connectTimeout, $timeout, $maxResponseBytes))
-        ->toThrow(InvalidConfiguration::class);
+        ->toThrow(InvalidConfigurationException::class);
 })->with([
     [0, 5, 1000],
     [5, 4, 1000],
@@ -36,5 +36,5 @@ it('rejects invalid HTTP settings', function (int $connectTimeout, int $timeout,
 
 it('rejects non-integer configured HTTP settings', function (): void {
     expect(fn(): HttpSettings => HttpSettings::fromConfig(['timeout' => '5']))
-        ->toThrow(InvalidConfiguration::class);
+        ->toThrow(InvalidConfigurationException::class);
 });

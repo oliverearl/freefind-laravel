@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Testing\SearchFixture;
 
 it('loads a named XML fixture from a file', function (): void {
@@ -14,7 +14,7 @@ it('loads a named XML fixture from a file', function (): void {
 
 it('rejects invalid or unreadable fixture definitions', function (): void {
     expect(fn(): SearchFixture => SearchFixture::for(''))
-        ->toThrow(InvalidSearchRequest::class)
+        ->toThrow(InvalidSearchRequestException::class)
         ->and(fn(): SearchFixture => SearchFixture::for('query')->fromFile(__DIR__ . '/missing.xml'))
-        ->toThrow(InvalidSearchRequest::class);
+        ->toThrow(InvalidSearchRequestException::class);
 });

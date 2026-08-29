@@ -7,16 +7,18 @@ namespace Freefind\Freefind\Search\Xml\Response;
 use DateTimeInterface;
 use Freefind\Freefind\Configuration\HttpSettings;
 use Freefind\Freefind\Contracts\XmlResponseParser;
-use Freefind\Freefind\Exceptions\FreefindServiceError;
-use Freefind\Freefind\Exceptions\InvalidOrClosedAccount;
-use Freefind\Freefind\Exceptions\MalformedXmlResponse;
-use Freefind\Freefind\Exceptions\RejectedSearchParameters;
+use Freefind\Freefind\Exceptions\FreefindServiceException;
+use Freefind\Freefind\Exceptions\InvalidOrClosedAccountException;
+use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
+use Freefind\Freefind\Exceptions\RejectedSearchParametersException;
 use Freefind\Freefind\Exceptions\SearchTransportException;
-use Freefind\Freefind\Exceptions\UnauthorizedXmlFeed;
+use Freefind\Freefind\Exceptions\UnauthorizedXmlFeedException;
 use Freefind\Freefind\Markup\AbsoluteUrl;
+use Freefind\Freefind\Markup\BrowsingContextName;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 use Freefind\Freefind\Search\Xml\Transport\XmlTransportResponse;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Str;
 use SimpleXMLElement;
 use Throwable;
 
@@ -40,14 +42,14 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         $this->assertElementCount($xml);
 
         if ($xml->getName() !== 'ret') {
-            throw new MalformedXmlResponse('The FreeFind XML response did not contain a ret root element.');
+            throw new MalformedXmlResponseException('The FreeFind XML response did not contain a ret root element.');
         }
 
         $statusCode = $this->integer($xml, 'sts', required: true);
         $status = FreefindStatus::tryFrom($statusCode);
 
         if ($status === null) {
-            throw new FreefindServiceError('FreeFind returned an unknown service status.');
+            throw new FreefindServiceException('FreeFind returned an unknown service status.');
         }
 
         if ($status !== FreefindStatus::Success) {
@@ -90,7 +92,7 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         }
 
         if ($xml === false) {
-            throw new MalformedXmlResponse('The FreeFind XML response could not be parsed.');
+            throw new MalformedXmlResponseException('The FreeFind XML response could not be parsed.');
         }
 
         return $xml;
@@ -104,7 +106,7 @@ final class FreefindXmlResponseParser implements XmlResponseParser
             $count += $this->assertElementCount($child);
 
             if ($count > self::MAX_ELEMENTS) {
-                throw new MalformedXmlResponse('The FreeFind XML response contained too many elements.');
+                throw new MalformedXmlResponseException('The FreeFind XML response contained too many elements.');
             }
         }
 
@@ -114,11 +116,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
     private function throwForStatus(FreefindStatus $status): never
     {
         throw match ($status) {
-            FreefindStatus::Error => new FreefindServiceError('FreeFind returned a service error.'),
-            FreefindStatus::Unauthorized => new UnauthorizedXmlFeed('The FreeFind XML feed is not authorized for this account.'),
-            FreefindStatus::InvalidAccount => new InvalidOrClosedAccount('The FreeFind account is invalid or closed.'),
-            FreefindStatus::InvalidParameters => new RejectedSearchParameters('FreeFind rejected the XML search parameters.'),
-            FreefindStatus::Success => new FreefindServiceError('FreeFind returned an unexpected success status.'),
+            FreefindStatus::Error => new FreefindServiceException('FreeFind returned a service error.'),
+            FreefindStatus::Unauthorized => new UnauthorizedXmlFeedException('The FreeFind XML feed is not authorized for this account.'),
+            FreefindStatus::InvalidAccount => new InvalidOrClosedAccountException('The FreeFind account is invalid or closed.'),
+            FreefindStatus::InvalidParameters => new RejectedSearchParametersException('FreeFind rejected the XML search parameters.'),
+            FreefindStatus::Success => new FreefindServiceException('FreeFind returned an unexpected success status.'),
         };
     }
 
@@ -163,20 +165,20 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         $url = $this->text($item, 'u');
 
         if ($url === null || trim($url) === '') {
-            throw new MalformedXmlResponse('A FreeFind result did not contain a click URL.');
+            throw new MalformedXmlResponseException('A FreeFind result did not contain a click URL.');
         }
 
         try {
             $safeUrl = AbsoluteUrl::from(trim($url));
         } catch (Throwable $exception) {
-            throw new MalformedXmlResponse('A FreeFind result contained an unsafe click URL.', previous: $exception);
+            throw new MalformedXmlResponseException('A FreeFind result contained an unsafe click URL.', previous: $exception);
         }
 
         $target = $this->text($item, 'tg');
         $target = $target === null || trim($target) === '' ? null : trim($target);
 
-        if ($target !== null && ! preg_match('/^(?:_(?:blank|self|parent|top)|[A-Za-z][A-Za-z0-9:_-]{0,63})$/', $target)) {
-            throw new MalformedXmlResponse('A FreeFind result contained an unsafe link target.');
+        if ($target !== null && ! BrowsingContextName::isValid($target)) {
+            throw new MalformedXmlResponseException('A FreeFind result contained an unsafe link target.');
         }
 
         return new SearchResult(
@@ -215,7 +217,7 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         }
 
         if (! in_array(trim($value), ['0', '1'], true)) {
-            throw new MalformedXmlResponse("The FreeFind XML field [{$name}] was not boolean.");
+            throw new MalformedXmlResponseException("The FreeFind XML field [{$name}] was not boolean.");
         }
 
         return trim($value) === '1';
@@ -227,7 +229,7 @@ final class FreefindXmlResponseParser implements XmlResponseParser
 
         if ($value === null || trim($value) === '') {
             if ($required) {
-                throw new MalformedXmlResponse("The FreeFind XML field [{$name}] was missing.");
+                throw new MalformedXmlResponseException("The FreeFind XML field [{$name}] was missing.");
             }
 
             return null;
@@ -236,7 +238,7 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         $value = trim($value);
 
         if (! preg_match('/^(?:0|[1-9][0-9]*)$/', $value) || filter_var($value, FILTER_VALIDATE_INT) === false) {
-            throw new MalformedXmlResponse("The FreeFind XML field [{$name}] was not a non-negative integer.");
+            throw new MalformedXmlResponseException("The FreeFind XML field [{$name}] was not a non-negative integer.");
         }
 
         return (int) $value;
@@ -279,7 +281,7 @@ final class FreefindXmlResponseParser implements XmlResponseParser
 
         $value = substr($serialized, $openingEnd + 1, $closingStart - $openingEnd - 1);
 
-        if (str_starts_with($value, '<![CDATA[') && str_ends_with($value, ']]>')) {
+        if (Str::startsWith($value, '<![CDATA[') && Str::endsWith($value, ']]>')) {
             $value = substr($value, 9, -3);
         }
 

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\Account;
-use Freefind\Freefind\Exceptions\InvalidConfiguration;
+use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
 it('keeps a site id as the configured string', function (): void {
     $account = new Account('0012345');
@@ -28,12 +28,12 @@ it('builds an account from package configuration', function (): void {
 
 it('rejects missing, non-string, blank, and unsafe site ids', function (mixed $siteId): void {
     expect(fn(): Account => Account::fromConfig(['site_id' => $siteId]))
-        ->toThrow(InvalidConfiguration::class);
+        ->toThrow(InvalidConfigurationException::class);
 })->with([null, 123, '', ' site-id', "site\n-id"]);
 
 it('rejects non-https or credential-bearing endpoints', function (string $endpoint): void {
     expect(fn(): Account => new Account('site-42', htmlEndpoint: $endpoint))
-        ->toThrow(InvalidConfiguration::class);
+        ->toThrow(InvalidConfigurationException::class);
 })->with([
     'http://example.test/find.html',
     'https://user:pass@example.test/find.html',
@@ -46,5 +46,5 @@ it('rejects endpoint values that are not strings', function (): void {
     expect(fn(): Account => Account::fromConfig([
         'site_id' => 'site-42',
         'endpoints' => ['html' => 123],
-    ]))->toThrow(InvalidConfiguration::class);
+    ]))->toThrow(InvalidConfigurationException::class);
 });

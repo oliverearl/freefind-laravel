@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Request;
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
 final readonly class XmlSearchUrl
 {
@@ -20,7 +20,7 @@ final readonly class XmlSearchUrl
             || ($parts['user'] ?? null) !== null
             || ($parts['pass'] ?? null) !== null
         ) {
-            throw new InvalidSearchRequest('FreeFind XML URLs must use HTTPS without credentials.');
+            throw new InvalidSearchRequestException('FreeFind XML URLs must use HTTPS without credentials.');
         }
     }
 

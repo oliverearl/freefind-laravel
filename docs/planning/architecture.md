@@ -314,14 +314,14 @@ Dates are parsed through Laravel's `Date` facade when they match expected format
 
 ### Error taxonomy
 
-- `InvalidConfiguration`: missing connection/site ID, unsupported mode, insecure endpoint.
-- `InvalidSearchRequest`: empty query, bad option range, reserved/invalid section.
+- `InvalidConfigurationException`: missing connection/site ID, unsupported mode, insecure endpoint.
+- `InvalidSearchRequestException`: empty query, bad option range, reserved/invalid section.
 - `SearchTransportException`: timeout, DNS/TLS failure, oversized body, disallowed redirect.
-- `MalformedXmlResponse`: invalid XML or required response shape.
-- `UnauthorizedXmlFeed` for status 2.
-- `InvalidOrClosedAccount` for status 3.
-- `RejectedSearchParameters` for status 4.
-- `FreefindServiceError` for status 1/unknown non-zero status.
+- `MalformedXmlResponseException`: invalid XML or required response shape.
+- `UnauthorizedXmlFeedException` for status 2.
+- `InvalidOrClosedAccountException` for status 3.
+- `RejectedSearchParametersException` for status 4.
+- `FreefindServiceException` for status 1/unknown non-zero status.
 
 FreeFind status errors are deterministic service responses and should not be collapsed into generic HTTP failures.
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final class MarkupState
 {
@@ -20,10 +20,13 @@ final class MarkupState
         $this->regions[] = $region;
     }
 
+    /**
+     * @throws InvalidMarkupException When the region does not match the open marker.
+     */
     public function end(string $region): void
     {
         if ($this->regions === [] || end($this->regions) !== $region) {
-            throw new InvalidMarkup("The FreeFind {$region} region ended without a matching start marker.");
+            throw new InvalidMarkupException("The FreeFind {$region} region ended without a matching start marker.");
         }
 
         array_pop($this->regions);

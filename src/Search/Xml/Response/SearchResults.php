@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Response;
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
 final readonly class SearchResults
 {
@@ -25,7 +25,7 @@ final readonly class SearchResults
         public SearchWindow $window,
     ) {
         if ($this->total < 0 || $this->returned < 0 || $this->offset < 0) {
-            throw new InvalidSearchRequest('FreeFind result counts and offsets must be non-negative.');
+            throw new InvalidSearchRequestException('FreeFind result counts and offsets must be non-negative.');
         }
     }
 }

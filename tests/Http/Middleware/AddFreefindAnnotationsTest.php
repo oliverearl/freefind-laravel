@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Http\Middleware\AddFreefindAnnotations;
 use Freefind\Freefind\Markup\AnnotationCollector;
 use Freefind\Freefind\Markup\Renderer;
@@ -39,7 +39,7 @@ it('normalizes comma-separated parameters and rejects unsupported annotations', 
 
     expect(resolve(AnnotationCollector::class)->render())->toBe('<!-- FreeFind No Map -->')
         ->and(fn(): mixed => $middleware->handle($request, fn(): Response => response('ok'), 'keywords'))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 });
 
 it('does not carry collected annotations into a later request', function (): void {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Xml\Query\AdvancedQuery;
 use Freefind\Freefind\Search\Xml\Query\DescriptionLength;
 use Freefind\Freefind\Search\Xml\Query\MatchMode;
@@ -41,9 +41,9 @@ it('encodes simple, advanced, and refined query pairs', function (): void {
 
 it('rejects empty or unsafe query values', function (): void {
     expect(fn(): SimpleQuery => new SimpleQuery('   '))
-        ->toThrow(InvalidSearchRequest::class)
+        ->toThrow(InvalidSearchRequestException::class)
         ->and(fn(): AdvancedQuery => new AdvancedQuery())
-        ->toThrow(InvalidSearchRequest::class)
+        ->toThrow(InvalidSearchRequestException::class)
         ->and(fn(): RefinedQuery => new RefinedQuery(new SimpleQuery('new'), "old\x00query"))
-        ->toThrow(InvalidSearchRequest::class);
+        ->toThrow(InvalidSearchRequestException::class);
 });

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Configuration;
 
-use Freefind\Freefind\Exceptions\InvalidConfiguration;
+use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
 final readonly class HttpSettings
 {
@@ -20,15 +20,15 @@ final readonly class HttpSettings
         public int $maxResponseBytes = self::DEFAULT_MAX_RESPONSE_BYTES,
     ) {
         if ($this->connectTimeout < 1) {
-            throw new InvalidConfiguration('The FreeFind HTTP connect timeout must be at least one second.');
+            throw new InvalidConfigurationException('The FreeFind HTTP connect timeout must be at least one second.');
         }
 
         if ($this->timeout < $this->connectTimeout) {
-            throw new InvalidConfiguration('The FreeFind HTTP timeout must be greater than or equal to the connect timeout.');
+            throw new InvalidConfigurationException('The FreeFind HTTP timeout must be greater than or equal to the connect timeout.');
         }
 
         if ($this->maxResponseBytes < 1) {
-            throw new InvalidConfiguration('The FreeFind maximum response size must be greater than zero.');
+            throw new InvalidConfigurationException('The FreeFind maximum response size must be greater than zero.');
         }
     }
 
@@ -52,7 +52,7 @@ final readonly class HttpSettings
         $value = $config[$key] ?? $default;
 
         if (! is_int($value)) {
-            throw new InvalidConfiguration("The freefind-laravel.http.{$key} value must be an integer.");
+            throw new InvalidConfigurationException("The freefind-laravel.http.{$key} value must be an integer.");
         }
 
         return $value;

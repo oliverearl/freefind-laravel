@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Response;
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
 final readonly class SearchWindow
 {
@@ -14,7 +14,7 @@ final readonly class SearchWindow
         public int $total,
     ) {
         if ($this->offset < 0 || $this->resultsPerPage < 1 || $this->total < 0) {
-            throw new InvalidSearchRequest('FreeFind pagination values must be non-negative and bounded.');
+            throw new InvalidSearchRequestException('FreeFind pagination values must be non-negative and bounded.');
         }
     }
 

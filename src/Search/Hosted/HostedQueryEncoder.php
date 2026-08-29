@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Hosted;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final class HostedQueryEncoder
 {
@@ -25,7 +25,7 @@ final class HostedQueryEncoder
     private function assertSafe(string $value): void
     {
         if (preg_match('//u', $value) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $value) === 1) {
-            throw new InvalidMarkup('Hosted FreeFind query fields cannot contain control characters or invalid UTF-8.');
+            throw new InvalidMarkupException('Hosted FreeFind query fields cannot contain control characters or invalid UTF-8.');
         }
     }
 }

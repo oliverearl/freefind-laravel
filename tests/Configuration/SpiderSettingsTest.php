@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\SpiderSettings;
-use Freefind\Freefind\Exceptions\InvalidConfiguration;
+use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
 it('defaults spider middleware to opt-in', function (): void {
     $settings = new SpiderSettings();
@@ -27,7 +27,7 @@ it('reads spider settings from configuration', function (): void {
 
 it('rejects malformed spider settings', function (array $config): void {
     expect(fn(): SpiderSettings => SpiderSettings::fromConfig($config))
-        ->toThrow(InvalidConfiguration::class);
+        ->toThrow(InvalidConfigurationException::class);
 })->with([
     [['middleware' => 'yes']],
     [['user_agents' => []]],

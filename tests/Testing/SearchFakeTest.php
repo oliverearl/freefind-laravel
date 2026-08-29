@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\Account;
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 use Freefind\Freefind\Testing\SearchFake;
@@ -24,7 +24,7 @@ it('rejects missing or duplicate fixture matches', function (): void {
     $fixture = SearchFixture::for('blade directive')->fromFile(__DIR__ . '/../Fixtures/xml/success.xml');
 
     expect(fn(): SearchFake => new SearchFake([$fixture, $fixture]))
-        ->toThrow(InvalidSearchRequest::class);
+        ->toThrow(InvalidSearchRequestException::class);
 
     $fake = new SearchFake([$fixture]);
 

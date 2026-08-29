@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Search\Hosted\HostedQueryEncoder;
 
 it('encodes form values with pluses and preserves repeated keys', function (): void {
@@ -19,5 +19,5 @@ it('encodes form values with pluses and preserves repeated keys', function (): v
 
 it('rejects unsafe form values', function (): void {
     expect(fn(): string => (new HostedQueryEncoder())->encode([['query', "one\x00two"]]))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 });

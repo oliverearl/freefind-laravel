@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Query;
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
 final readonly class RefinedQuery
 {
@@ -13,11 +13,11 @@ final readonly class RefinedQuery
         public string $previousQuery,
     ) {
         if (trim($this->previousQuery) === '') {
-            throw new InvalidSearchRequest('A refined FreeFind search must include the previous query.');
+            throw new InvalidSearchRequestException('A refined FreeFind search must include the previous query.');
         }
 
         if (preg_match('//u', $this->previousQuery) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $this->previousQuery) === 1) {
-            throw new InvalidSearchRequest('The previous FreeFind query must be valid text without control characters.');
+            throw new InvalidSearchRequestException('The previous FreeFind query must be valid text without control characters.');
         }
     }
 

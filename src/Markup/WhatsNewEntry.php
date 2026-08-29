@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Freefind\Freefind\Markup;
 
 use DateTimeInterface;
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class WhatsNewEntry
 {
@@ -15,11 +15,11 @@ final readonly class WhatsNewEntry
         public ?string $comment = null,
     ) {
         if ($this->date === null && $this->icon === null && $this->comment === null) {
-            throw new InvalidMarkup('A FreeFind whats-new annotation must provide at least one value.');
+            throw new InvalidMarkupException('A FreeFind whats-new annotation must provide at least one value.');
         }
 
         if ($this->comment === '') {
-            throw new InvalidMarkup('The FreeFind whats-new comment must not be empty.');
+            throw new InvalidMarkupException('The FreeFind whats-new comment must not be empty.');
         }
 
         if ($this->comment !== null) {

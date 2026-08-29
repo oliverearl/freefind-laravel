@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Blade;
 use Freefind\Freefind\Configuration\FreefindConfig;
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\View\Components\SearchForm;
 
@@ -65,7 +65,7 @@ it('rejects non-GET methods and unsafe text values', function (): void {
     $search = resolve(HostedSearch::class);
 
     expect(fn(): SearchForm => new SearchForm($search, method: 'post'))
-        ->toThrow(InvalidMarkup::class)
+        ->toThrow(InvalidMarkupException::class)
         ->and(fn(): SearchForm => new SearchForm($search, label: "bad\x00label"))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 });

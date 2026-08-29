@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\View\Components;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
@@ -17,7 +17,7 @@ final class EmptyState extends Component
             || preg_match('//u', $this->message) !== 1
             || preg_match('/[\x00-\x1F\x7F]/', $this->message) === 1
         ) {
-            throw new InvalidMarkup('FreeFind empty-state messages must be non-empty valid text without control characters.');
+            throw new InvalidMarkupException('FreeFind empty-state messages must be non-empty valid text without control characters.');
         }
     }
 

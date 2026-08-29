@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Freefind\Freefind\Search\Hosted;
 
 use Freefind\Freefind\Configuration\Account;
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class HostedSearch
 {
@@ -113,7 +113,7 @@ final readonly class HostedSearch
     private function safeValue(string $value, string $name): string
     {
         if (preg_match('//u', $value) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $value) === 1) {
-            throw new InvalidMarkup("Hosted FreeFind {$name} values cannot contain control characters or invalid UTF-8.");
+            throw new InvalidMarkupException("Hosted FreeFind {$name} values cannot contain control characters or invalid UTF-8.");
         }
 
         return $value;

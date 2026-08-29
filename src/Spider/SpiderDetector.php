@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Freefind\Freefind\Spider;
 
 use Freefind\Freefind\Configuration\SpiderSettings;
+use Illuminate\Support\Str;
 
 final readonly class SpiderDetector
 {
@@ -20,10 +21,10 @@ final readonly class SpiderDetector
 
     public function detect(?string $userAgent): ?string
     {
-        $normalizedUserAgent = strtolower($userAgent ?? '');
+        $normalizedUserAgent = Str::lower($userAgent ?? '');
 
         foreach ($this->signatures as $signature) {
-            if (str_contains($normalizedUserAgent, strtolower($signature))) {
+            if (Str::contains($normalizedUserAgent, Str::lower($signature))) {
                 return $signature;
             }
         }

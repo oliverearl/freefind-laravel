@@ -6,4 +6,4 @@ namespace Freefind\Freefind\Exceptions;
 
 use InvalidArgumentException;
 
-final class InvalidConfiguration extends InvalidArgumentException {}
+final class InvalidConfigurationException extends InvalidArgumentException {}

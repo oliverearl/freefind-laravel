@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Configuration;
 
-use Freefind\Freefind\Exceptions\InvalidConfiguration;
+use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
 final readonly class Account
 {
@@ -34,13 +34,13 @@ final readonly class Account
         $siteId = $config['site_id'] ?? null;
 
         if (! is_string($siteId)) {
-            throw new InvalidConfiguration('The freefind-laravel.site_id value must be a non-empty string.');
+            throw new InvalidConfigurationException('The freefind-laravel.site_id value must be a non-empty string.');
         }
 
         $endpoints = $config['endpoints'] ?? [];
 
         if (! is_array($endpoints)) {
-            throw new InvalidConfiguration('The freefind-laravel.endpoints value must be an array.');
+            throw new InvalidConfigurationException('The freefind-laravel.endpoints value must be an array.');
         }
 
         return new self(
@@ -54,7 +54,7 @@ final readonly class Account
     private static function validateSiteId(string $siteId): void
     {
         if ($siteId === '' || trim($siteId) !== $siteId || preg_match('/[\x00-\x1F\x7F]/', $siteId) === 1) {
-            throw new InvalidConfiguration('The freefind-laravel.site_id value must be a non-empty string without surrounding whitespace or control characters.');
+            throw new InvalidConfigurationException('The freefind-laravel.site_id value must be a non-empty string without surrounding whitespace or control characters.');
         }
     }
 
@@ -71,7 +71,7 @@ final readonly class Account
             || ($parts['query'] ?? null) !== null
             || ($parts['fragment'] ?? null) !== null
         ) {
-            throw new InvalidConfiguration("The freefind-laravel.endpoints.{$name} value must be an HTTPS URL without credentials, query parameters, or fragments.");
+            throw new InvalidConfigurationException("The freefind-laravel.endpoints.{$name} value must be an HTTPS URL without credentials, query parameters, or fragments.");
         }
     }
 
@@ -83,7 +83,7 @@ final readonly class Account
         $endpoint = $endpoints[$name] ?? $default;
 
         if (! is_string($endpoint)) {
-            throw new InvalidConfiguration("The freefind-laravel.endpoints.{$name} value must be a string.");
+            throw new InvalidConfigurationException("The freefind-laravel.endpoints.{$name} value must be a string.");
         }
 
         return $endpoint;

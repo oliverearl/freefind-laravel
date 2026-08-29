@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Markup\AbsoluteUrl;
 use Freefind\Freefind\Markup\DocumentDate;
 use Freefind\Freefind\Markup\ExplicitLinks;
@@ -21,7 +21,7 @@ it('validates and defaults weighted keywords', function (): void {
 
 it('rejects invalid keyword lists and weights', function (array $words, int $count): void {
     expect(fn(): Keywords => new Keywords($words, $count))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 })->with([
     [[], 1],
     [[''], 1],
@@ -46,7 +46,7 @@ it('validates explicit links', function (): void {
 
 it('rejects invalid explicit links', function (): void {
     expect(fn(): ExplicitLinks => ExplicitLinks::from(['javascript:alert(1)']))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 });
 
 it('validates map titles and whats-new entries', function (): void {
@@ -58,9 +58,9 @@ it('validates map titles and whats-new entries', function (): void {
 });
 
 it('rejects empty map and whats-new values', function (): void {
-    expect(fn(): MapTitle => MapTitle::from(''))->toThrow(InvalidMarkup::class)
-        ->and(fn(): WhatsNewEntry => WhatsNewEntry::from())->toThrow(InvalidMarkup::class)
-        ->and(fn(): WhatsNewEntry => WhatsNewEntry::from(comment: ''))->toThrow(InvalidMarkup::class);
+    expect(fn(): MapTitle => MapTitle::from(''))->toThrow(InvalidMarkupException::class)
+        ->and(fn(): WhatsNewEntry => WhatsNewEntry::from())->toThrow(InvalidMarkupException::class)
+        ->and(fn(): WhatsNewEntry => WhatsNewEntry::from(comment: ''))->toThrow(InvalidMarkupException::class);
 });
 
 it('validates result image dimensions, attributes, and targets', function (): void {
@@ -80,7 +80,7 @@ it('validates result image dimensions, attributes, and targets', function (): vo
 });
 
 it('rejects unsafe result image options', function (callable $factory): void {
-    expect($factory)->toThrow(InvalidMarkup::class);
+    expect($factory)->toThrow(InvalidMarkupException::class);
 })->with([
     fn(): ResultImage => ResultImage::from('https://example.test/image.jpg', width: 0),
     fn(): ResultImage => ResultImage::from('https://example.test/image.jpg', attributes: ['onerror' => 'alert(1)']),
@@ -97,7 +97,7 @@ it('validates link policy options', function (): void {
 
 it('rejects empty or unsupported link policies', function (?string $queries, ?string $scripts, ?string $robots): void {
     expect(fn(): LinkPolicy => new LinkPolicy($queries, $scripts, $robots))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 })->with([
     [null, null, null],
     ['invalid', null, null],

@@ -8,7 +8,7 @@ use Closure;
 use Freefind\Freefind\Configuration\Account;
 use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Contracts\XmlResponseParser;
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\XmlSearchQuery;
@@ -76,7 +76,7 @@ final class Freefind
     public function assertSearched(Closure $predicate): void
     {
         if ($this->searchFake === null) {
-            throw new InvalidSearchRequest('FreeFind search assertions require Freefind::fake() first.');
+            throw new InvalidSearchRequestException('FreeFind search assertions require Freefind::fake() first.');
         }
 
         $this->searchFake->assertSearched($predicate);

@@ -6,7 +6,8 @@ namespace Freefind\Freefind\Search\Xml\Response;
 
 use DateTimeInterface;
 use Freefind\Freefind\Markup\AbsoluteUrl;
-use Freefind\Freefind\Exceptions\MalformedXmlResponse;
+use Freefind\Freefind\Markup\BrowsingContextName;
+use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
 
 final readonly class SearchResult
 {
@@ -21,11 +22,11 @@ final readonly class SearchResult
         public RawResultFields $raw,
     ) {
         if ($this->number !== null && $this->number < 0) {
-            throw new MalformedXmlResponse('A FreeFind result number was negative.');
+            throw new MalformedXmlResponseException('A FreeFind result number was negative.');
         }
 
-        if ($this->target !== null && ! preg_match('/^(?:_(?:blank|self|parent|top)|[A-Za-z][A-Za-z0-9:_-]{0,63})$/', $this->target)) {
-            throw new MalformedXmlResponse('A FreeFind result contained an unsafe link target.');
+        if ($this->target !== null && ! BrowsingContextName::isValid($this->target)) {
+            throw new MalformedXmlResponseException('A FreeFind result contained an unsafe link target.');
         }
     }
 }

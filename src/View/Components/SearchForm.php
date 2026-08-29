@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\View\Components;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
+use Freefind\Freefind\Markup\BrowsingContextName;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Hosted\Language;
 use Freefind\Freefind\Search\Hosted\Section;
@@ -15,6 +16,9 @@ final class SearchForm extends Component
 {
     /**
      * @param  array<array-key, mixed>  $sections
+     */
+    /**
+     * @throws InvalidMarkupException When a form value is unsafe or invalid.
      */
     public function __construct(
         private readonly HostedSearch $search,
@@ -30,30 +34,30 @@ final class SearchForm extends Component
         public ?string $target = null,
     ) {
         if ($this->label === '' || $this->submitLabel === '') {
-            throw new InvalidMarkup('FreeFind search form labels must not be empty.');
+            throw new InvalidMarkupException('FreeFind search form labels must not be empty.');
         }
 
         foreach ([$this->label, $this->submitLabel] as $text) {
             if (preg_match('//u', $text) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $text) === 1) {
-                throw new InvalidMarkup('FreeFind search form labels must be valid text without control characters.');
+                throw new InvalidMarkupException('FreeFind search form labels must be valid text without control characters.');
             }
         }
 
         if ($this->method !== 'get') {
-            throw new InvalidMarkup('FreeFind hosted search forms only support the GET method.');
+            throw new InvalidMarkupException('FreeFind hosted search forms only support the GET method.');
         }
 
         if (! preg_match('/^[A-Za-z][A-Za-z0-9_-]{0,63}$/', $this->inputId)) {
-            throw new InvalidMarkup('FreeFind search form input IDs must be valid HTML identifiers.');
+            throw new InvalidMarkupException('FreeFind search form input IDs must be valid HTML identifiers.');
         }
 
-        if ($this->target !== null && ! preg_match('/^(?:_(?:blank|self|parent|top)|[A-Za-z][A-Za-z0-9:_-]{0,63})$/', $this->target)) {
-            throw new InvalidMarkup('FreeFind search form targets must be valid browsing-context names.');
+        if ($this->target !== null && ! BrowsingContextName::isValid($this->target)) {
+            throw new InvalidMarkupException('FreeFind search form targets must be valid browsing-context names.');
         }
 
         foreach ($this->sections as $id => $label) {
             if (! is_string($id) || ! is_string($label)) {
-                throw new InvalidMarkup('FreeFind search form sections must be a string identifier-to-label map.');
+                throw new InvalidMarkupException('FreeFind search form sections must be a string identifier-to-label map.');
             }
 
             Section::from($id, $label);
@@ -92,7 +96,7 @@ final class SearchForm extends Component
 
         foreach ($this->sections as $id => $label) {
             if (! is_string($id) || ! is_string($label)) {
-                throw new InvalidMarkup('FreeFind search form sections must be a string identifier-to-label map.');
+                throw new InvalidMarkupException('FreeFind search form sections must be a string identifier-to-label map.');
             }
 
             $options[] = Section::from($id, $label);
@@ -104,7 +108,7 @@ final class SearchForm extends Component
     private function safeQuery(string $query): string
     {
         if (preg_match('//u', $query) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $query) === 1) {
-            throw new InvalidMarkup('FreeFind search queries must be valid text without control characters.');
+            throw new InvalidMarkupException('FreeFind search queries must be valid text without control characters.');
         }
 
         return $query;

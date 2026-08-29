@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\View\Components;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
+use Illuminate\Support\Str;
 
 final readonly class NavigationUrl
 {
@@ -13,12 +14,12 @@ final readonly class NavigationUrl
         if (
             preg_match('//u', $this->value) !== 1
             || preg_match('/[\x00-\x20\x7F]/', $this->value) === 1
-            || str_starts_with($this->value, '//')
+            || Str::startsWith($this->value, '//')
         ) {
-            throw new InvalidMarkup('FreeFind navigation URLs must be valid URLs without whitespace, controls, or protocol-relative targets.');
+            throw new InvalidMarkupException('FreeFind navigation URLs must be valid URLs without whitespace, controls, or protocol-relative targets.');
         }
 
-        if (str_starts_with($this->value, '/')) {
+        if (Str::startsWith($this->value, '/')) {
             return;
         }
 
@@ -26,12 +27,12 @@ final readonly class NavigationUrl
 
         if (
             $parts === false
-            || ! in_array(strtolower((string) ($parts['scheme'] ?? '')), ['http', 'https'], true)
+            || ! in_array(Str::lower((string) ($parts['scheme'] ?? '')), ['http', 'https'], true)
             || ! is_string($parts['host'] ?? null)
             || ($parts['user'] ?? null) !== null
             || ($parts['pass'] ?? null) !== null
         ) {
-            throw new InvalidMarkup('FreeFind navigation URLs must use an absolute http or https URL without credentials, or a root-relative path.');
+            throw new InvalidMarkupException('FreeFind navigation URLs must use an absolute http or https URL without credentials, or a root-relative path.');
         }
     }
 

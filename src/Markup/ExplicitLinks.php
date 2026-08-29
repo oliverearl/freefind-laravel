@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class ExplicitLinks
 {
@@ -19,11 +19,11 @@ final readonly class ExplicitLinks
     public function __construct(array $urls)
     {
         if ($urls === [] || count($urls) > 100) {
-            throw new InvalidMarkup('FreeFind explicit links must contain between one and 100 URLs.');
+            throw new InvalidMarkupException('FreeFind explicit links must contain between one and 100 URLs.');
         }
 
         if (! array_is_list($urls) || ! array_all($urls, fn(mixed $url): bool => $url instanceof AbsoluteUrl)) {
-            throw new InvalidMarkup('FreeFind explicit links must contain only validated absolute URLs.');
+            throw new InvalidMarkupException('FreeFind explicit links must contain only validated absolute URLs.');
         }
 
         /** @var list<AbsoluteUrl> $urls */
@@ -37,7 +37,7 @@ final readonly class ExplicitLinks
     {
         foreach ($urls as $url) {
             if (! is_string($url) && ! $url instanceof AbsoluteUrl) {
-                throw new InvalidMarkup('FreeFind explicit links must contain URL strings or validated absolute URLs.');
+                throw new InvalidMarkupException('FreeFind explicit links must contain URL strings or validated absolute URLs.');
             }
         }
 

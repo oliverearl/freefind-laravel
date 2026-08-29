@@ -136,6 +136,12 @@ Decision: `1.0.0` contains no DataSearch configuration, directives, components, 
 
 Why: DataSearch has a separate account lifecycle, markup model, result-hosting security surface, and no documented XML integration. Deferring it keeps the first release cohesive and avoids designing multi-account abstractions before a concrete DataSearch integration is being built.
 
+### D23 — Package exceptions use an `Exception` suffix
+
+Decision: name every package-owned exception with the `Exception` suffix and enforce the convention with an architecture test. Existing exploratory names are replaced directly without compatibility aliases.
+
+Why: the suffix makes thrown types immediately recognizable at call sites and keeps the exception namespace consistent before the first published release.
+
 ## Later DataSearch context
 
 What is already known from FreeFind's documentation:

@@ -6,4 +6,4 @@ namespace Freefind\Freefind\Exceptions;
 
 use InvalidArgumentException;
 
-final class InvalidMarkup extends InvalidArgumentException {}
+final class InvalidSearchRequestException extends InvalidArgumentException {}

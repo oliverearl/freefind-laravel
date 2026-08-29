@@ -52,7 +52,11 @@ it('renders exact link-policy meta tags', function (): void {
     $policy = LinkPolicy::from(queries: 'strip', scripts: 'never', robots: 'ignore');
 
     expect($this->renderer->globalLinkPolicy($policy))
-        ->toBe("<meta name=\"FreeFind\" content=\"stripQueries\">\n<meta name=\"FreeFind\" content=\"neverFollowScript\">\n<meta name=\"FreeFind\" content=\"noRobotsTag\">");
+        ->toBe(implode(PHP_EOL, [
+            '<meta name="FreeFind" content="stripQueries">',
+            '<meta name="FreeFind" content="neverFollowScript">',
+            '<meta name="FreeFind" content="noRobotsTag">',
+        ]));
 });
 
 it('renders and validates paired fragment markers', function (): void {

@@ -5,12 +5,12 @@ declare(strict_types=1);
 use Freefind\Freefind\Configuration\Account;
 use Freefind\Freefind\Configuration\HttpSettings;
 use Freefind\Freefind\Contracts\XmlResponseParser;
-use Freefind\Freefind\Exceptions\FreefindServiceError;
-use Freefind\Freefind\Exceptions\InvalidOrClosedAccount;
-use Freefind\Freefind\Exceptions\MalformedXmlResponse;
-use Freefind\Freefind\Exceptions\RejectedSearchParameters;
+use Freefind\Freefind\Exceptions\FreefindServiceException;
+use Freefind\Freefind\Exceptions\InvalidOrClosedAccountException;
+use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
+use Freefind\Freefind\Exceptions\RejectedSearchParametersException;
 use Freefind\Freefind\Exceptions\SearchTransportException;
-use Freefind\Freefind\Exceptions\UnauthorizedXmlFeed;
+use Freefind\Freefind\Exceptions\UnauthorizedXmlFeedException;
 use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 use Freefind\Freefind\Search\Xml\Response\FreefindStatus;
@@ -67,20 +67,20 @@ it('maps documented service statuses without exposing remote messages', function
         $this->request,
     ))->toThrow($exception);
 })->with([
-    [1, FreefindServiceError::class],
-    [2, UnauthorizedXmlFeed::class],
-    [3, InvalidOrClosedAccount::class],
-    [4, RejectedSearchParameters::class],
-    [9, FreefindServiceError::class],
+    [1, FreefindServiceException::class],
+    [2, UnauthorizedXmlFeedException::class],
+    [3, InvalidOrClosedAccountException::class],
+    [4, RejectedSearchParametersException::class],
+    [9, FreefindServiceException::class],
 ]);
 
 it('rejects malformed XML, unsafe result links, oversized bodies, and non-success HTTP responses', function (): void {
     expect(fn(): mixed => $this->parser->parse(new XmlTransportResponse(200, '<ret>'), $this->request))
-        ->toThrow(MalformedXmlResponse::class)
+        ->toThrow(MalformedXmlResponseException::class)
         ->and(fn(): mixed => $this->parser->parse(
             new XmlTransportResponse(200, '<ret><sts>0</sts><srch><items><i><u>javascript:alert(1)</u></i></items></srch></ret>'),
             $this->request,
-        ))->toThrow(MalformedXmlResponse::class)
+        ))->toThrow(MalformedXmlResponseException::class)
         ->and(fn(): mixed => $this->parser->parse(
             new XmlTransportResponse(200, str_repeat('x', 5001)),
             $this->request,

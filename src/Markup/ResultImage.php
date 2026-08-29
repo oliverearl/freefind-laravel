@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class ResultImage
 {
     /**
-     * @param  array<mixed>  $attributes
-     * @param  array<mixed>  $linkAttributes
+     * @throws InvalidMarkupException When an image value is unsafe or invalid.
      */
     public function __construct(
         public AbsoluteUrl $src,
@@ -31,15 +30,13 @@ final readonly class ResultImage
             HtmlCommentEscaper::assertSafe($this->alt);
         }
 
-        if ($this->target !== null && ! preg_match('/^(?:_(?:blank|self|parent|top)|[A-Za-z][A-Za-z0-9:_-]{0,63})$/', $this->target)) {
-            throw new InvalidMarkup('FreeFind image targets must be valid browsing-context names.');
+        if ($this->target !== null && ! BrowsingContextName::isValid($this->target)) {
+            throw new InvalidMarkupException('FreeFind image targets must be valid browsing-context names.');
         }
     }
 
     /**
-     * @param  string|AbsoluteUrl  $src
-     * @param  array<mixed>  $attributes
-     * @param  array<mixed>  $linkAttributes
+     * @throws InvalidMarkupException When an image value is unsafe or invalid.
      */
     public static function from(
         string|AbsoluteUrl $src,
@@ -66,19 +63,16 @@ final readonly class ResultImage
     private static function validateDimension(?int $dimension, string $name): void
     {
         if ($dimension !== null && ($dimension < 1 || $dimension > 10_000)) {
-            throw new InvalidMarkup("FreeFind image {$name} must be between 1 and 10000 pixels.");
+            throw new InvalidMarkupException("FreeFind image {$name} must be between 1 and 10000 pixels.");
         }
     }
 
-    /**
-     * @param  array<mixed>  $attributes
-     * @param  list<string>  $allowed
-     */
+    /** @param list<string> $allowed */
     private static function validateAttributes(array $attributes, array $allowed): void
     {
         foreach ($attributes as $name => $value) {
             if (! in_array($name, $allowed, true) || ! is_scalar($value)) {
-                throw new InvalidMarkup("The FreeFind image attribute [{$name}] is not allowed.");
+                throw new InvalidMarkupException("The FreeFind image attribute [{$name}] is not allowed.");
             }
 
             HtmlCommentEscaper::assertSafe((string) $value);

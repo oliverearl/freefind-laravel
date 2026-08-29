@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Markup\AbsoluteUrl;
 use Freefind\Freefind\Search\Xml\Response\FreefindStatus;
 use Freefind\Freefind\Search\Xml\Response\RawResultFields;
@@ -137,9 +137,9 @@ it('validates navigation URLs and component text boundaries', function (): void 
     expect(NavigationUrl::from('/search?q=blade')->value)->toBe('/search?q=blade')
         ->and(NavigationUrl::from('https://example.test/search')->value)->toBe('https://example.test/search')
         ->and(fn(): NavigationUrl => NavigationUrl::from('javascript:alert(1)'))
-        ->toThrow(InvalidMarkup::class)
+        ->toThrow(InvalidMarkupException::class)
         ->and(fn(): Results => new Results($this->results, headingId: 'bad id'))
-        ->toThrow(InvalidMarkup::class)
+        ->toThrow(InvalidMarkupException::class)
         ->and(fn(): Pagination => new Pagination(new SearchWindow(0, 10, 10), previousLabel: ''))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 });

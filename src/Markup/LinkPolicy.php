@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Markup;
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
 final readonly class LinkPolicy
 {
@@ -14,7 +14,7 @@ final readonly class LinkPolicy
         public ?string $robots = null,
     ) {
         if ($this->queries === null && $this->scripts === null && $this->robots === null) {
-            throw new InvalidMarkup('A FreeFind link policy must provide at least one setting.');
+            throw new InvalidMarkupException('A FreeFind link policy must provide at least one setting.');
         }
 
         self::validate($this->queries, ['strip', 'ignore'], 'queries');
@@ -36,7 +36,7 @@ final readonly class LinkPolicy
     private static function validate(?string $value, array $allowed, string $name): void
     {
         if ($value !== null && ! in_array($value, $allowed, true)) {
-            throw new InvalidMarkup("The FreeFind {$name} policy is invalid.");
+            throw new InvalidMarkupException("The FreeFind {$name} policy is invalid.");
         }
     }
 }

@@ -9,6 +9,7 @@ use Freefind\Freefind\Configuration\SpiderSettings;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,8 +55,8 @@ final class DetectFreefindSpider
             return false;
         }
 
-        $contentType = strtolower($response->headers->get('Content-Type', ''));
+        $contentType = Str::lower($response->headers->get('Content-Type', ''));
 
-        return $contentType === '' || str_starts_with($contentType, 'text/html');
+        return $contentType === '' || Str::startsWith($contentType, 'text/html');
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Response;
 
-use Freefind\Freefind\Exceptions\MalformedXmlResponse;
+use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
 
 final readonly class SpellingSuggestion
 {
@@ -13,7 +13,7 @@ final readonly class SpellingSuggestion
         public ?string $encodedQuery = null,
     ) {
         if (trim($this->query) === '') {
-            throw new MalformedXmlResponse('The FreeFind spelling suggestion was empty.');
+            throw new MalformedXmlResponseException('The FreeFind spelling suggestion was empty.');
         }
     }
 }

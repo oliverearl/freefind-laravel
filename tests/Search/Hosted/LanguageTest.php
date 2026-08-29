@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Search\Hosted\Language;
 
 it('accepts documented language codes', function (): void {
@@ -16,10 +16,10 @@ it('allows a validated custom language code for forward compatibility', function
 
 it('rejects undocumented or malformed language codes', function (string $code): void {
     expect(fn(): Language => Language::fromCode($code))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 })->with(['xx', 'EN', 'not a code', '']);
 
 it('rejects malformed custom language codes', function (string $code): void {
     expect(fn(): Language => Language::custom($code))
-        ->toThrow(InvalidMarkup::class);
+        ->toThrow(InvalidMarkupException::class);
 })->with(['not a code', 'TOO-LONG-CODE', '1x']);

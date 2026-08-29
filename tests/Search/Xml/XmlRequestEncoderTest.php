@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\Account;
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Xml\Query\MatchMode;
 use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
 use Freefind\Freefind\Search\Xml\Request\SearchOptions;
@@ -32,7 +32,7 @@ it('represents secure XML URLs and rejects unsafe standalone values', function (
 
     expect((string) $url)->toBe($url->value)
         ->and(fn(): XmlSearchUrl => new XmlSearchUrl('http://search.freefind.com/find.xml'))
-        ->toThrow(InvalidSearchRequest::class)
+        ->toThrow(InvalidSearchRequestException::class)
         ->and(fn(): XmlSearchUrl => new XmlSearchUrl('https://user:pass@search.freefind.com/find.xml'))
-        ->toThrow(InvalidSearchRequest::class);
+        ->toThrow(InvalidSearchRequestException::class);
 });

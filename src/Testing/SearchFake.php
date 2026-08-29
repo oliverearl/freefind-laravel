@@ -6,7 +6,7 @@ namespace Freefind\Freefind\Testing;
 
 use Closure;
 use Freefind\Freefind\Contracts\SearchTransport;
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 use Freefind\Freefind\Search\Xml\Transport\XmlTransportResponse;
 use RuntimeException;
@@ -32,11 +32,11 @@ final class SearchFake implements SearchTransport
 
         foreach ($fixtures as $fixture) {
             if (! $fixture instanceof SearchFixture || $fixture->body === '') {
-                throw new InvalidSearchRequest('FreeFind fake fixtures must be loaded SearchFixture instances.');
+                throw new InvalidSearchRequestException('FreeFind fake fixtures must be loaded SearchFixture instances.');
             }
 
             if (array_key_exists($fixture->query, $this->fixtures)) {
-                throw new InvalidSearchRequest('FreeFind fake fixture queries must be unique.');
+                throw new InvalidSearchRequestException('FreeFind fake fixture queries must be unique.');
             }
 
             $this->fixtures[$fixture->query] = $fixture;

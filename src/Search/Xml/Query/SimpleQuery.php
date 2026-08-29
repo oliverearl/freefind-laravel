@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Search\Xml\Query;
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
 final readonly class SimpleQuery
 {
@@ -36,7 +36,7 @@ final readonly class SimpleQuery
             || preg_match('//u', $query) !== 1
             || preg_match('/[\x00-\x1F\x7F]/', $query) === 1
         ) {
-            throw new InvalidSearchRequest('FreeFind search queries must be non-empty valid text without control characters.');
+            throw new InvalidSearchRequestException('FreeFind search queries must be non-empty valid text without control characters.');
         }
     }
 }

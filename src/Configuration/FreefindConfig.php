@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind\Configuration;
 
-use Freefind\Freefind\Exceptions\InvalidConfiguration;
+use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
 final readonly class FreefindConfig
 {
@@ -23,11 +23,11 @@ final readonly class FreefindConfig
         $spider = $config['spider'] ?? [];
 
         if (! is_array($http)) {
-            throw new InvalidConfiguration('The freefind-laravel.http value must be an array.');
+            throw new InvalidConfigurationException('The freefind-laravel.http value must be an array.');
         }
 
         if (! is_array($spider)) {
-            throw new InvalidConfiguration('The freefind-laravel.spider value must be an array.');
+            throw new InvalidConfigurationException('The freefind-laravel.spider value must be an array.');
         }
 
         return new self(

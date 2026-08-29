@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Freefind\Freefind\Markup\MarkupState;
 
 it('tracks nested markup regions and detects mismatched ends', function (): void {
@@ -12,7 +12,7 @@ it('tracks nested markup regions and detects mismatched ends', function (): void
 
     expect($state->isBalanced())->toBeFalse();
 
-    expect(fn() => $state->end('no-index'))->toThrow(InvalidMarkup::class);
+    expect(fn() => $state->end('no-index'))->toThrow(InvalidMarkupException::class);
 
     $state->end('no-follow');
     $state->end('no-index');

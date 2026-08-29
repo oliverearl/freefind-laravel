@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Freefind\Freefind\Exceptions\InvalidSearchRequest;
-use Freefind\Freefind\Exceptions\MalformedXmlResponse;
+use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
+use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
 use Freefind\Freefind\Markup\AbsoluteUrl;
 use Freefind\Freefind\Search\Xml\Response\FreefindStatus;
 use Freefind\Freefind\Search\Xml\Response\RawResultFields;
@@ -47,9 +47,9 @@ it('provides typed response models and local pagination helpers', function (): v
 
 it('rejects invalid response model values', function (): void {
     expect(fn(): SearchWindow => new SearchWindow(-1, 10, 1))
-        ->toThrow(InvalidSearchRequest::class)
+        ->toThrow(InvalidSearchRequestException::class)
         ->and(fn(): SpellingSuggestion => new SpellingSuggestion(''))
-        ->toThrow(MalformedXmlResponse::class)
+        ->toThrow(MalformedXmlResponseException::class)
         ->and(fn(): SearchResult => new SearchResult(
             number: 1,
             title: '',
@@ -59,5 +59,5 @@ it('rejects invalid response model values', function (): void {
             displayUrl: '',
             date: null,
             raw: new RawResultFields(null, null, null),
-        ))->toThrow(MalformedXmlResponse::class);
+        ))->toThrow(MalformedXmlResponseException::class);
 });
