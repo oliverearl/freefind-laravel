@@ -166,7 +166,7 @@ These helpers should be shipped only after their parameter contracts are covered
 ### Laravel-friendly query builder
 
 ```php
-use Freefind\Freefind\Search\SortOrder;
+use Freefind\Freefind\Search\Xml\Query\SortOrder;
 
 $results = Freefind::search($request->string('q')->toString())
     ->inSections(['manuals', 'releases'])
@@ -181,8 +181,8 @@ The builder is immutable: each option returns a new builder, and only `get()` pe
 ### Advanced search
 
 ```php
-use Freefind\Freefind\Search\AdvancedQuery;
-use Freefind\Freefind\Search\SearchOptions;
+use Freefind\Freefind\Search\Xml\Query\AdvancedQuery;
+use Freefind\Freefind\Search\Xml\Request\SearchOptions;
 
 $results = Freefind::xml()
     ->execute(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\Account;
 use Freefind\Freefind\Contracts\SearchTransport;
+use Freefind\Freefind\Contracts\SearchClient;
 use Freefind\Freefind\Contracts\XmlResponseParser;
 use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
@@ -71,6 +72,36 @@ it('executes exactly one transport call and parses its response with the origina
         ->and($parser->calls)->toBe(1)
         ->and($parser->request)->toBe($request)
         ->and($parser->response)->toBe($response);
+});
+
+it('implements the search client contract', function (): void {
+    $client = new FreefindXmlClient(
+        new class implements SearchTransport {
+            public function send(XmlSearchRequest $request): XmlTransportResponse
+            {
+                return new XmlTransportResponse(200, '<ret><sts>0</sts></ret>');
+            }
+        },
+        new class implements XmlResponseParser {
+            public function parse(XmlTransportResponse $response, XmlSearchRequest $request): SearchResults
+            {
+                return new SearchResults(
+                    status: FreefindStatus::Success,
+                    query: 'query',
+                    total: 0,
+                    returned: 0,
+                    offset: 0,
+                    sections: [],
+                    spelling: null,
+                    usedAutomaticAnyMode: false,
+                    items: [],
+                    window: new SearchWindow(0, 10, 0),
+                );
+            }
+        },
+    );
+
+    expect($client)->toBeInstanceOf(SearchClient::class);
 });
 
 it('does not send a request before the explicit terminal call', function (): void {

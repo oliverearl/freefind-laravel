@@ -4,9 +4,9 @@
 
 Build vertical internal slices, but do not publish partial `0.x` releases. Generated markup and XML fixtures are the contracts; Blade components sit on top only after those contracts are stable. The first published package is the complete `1.0.0`.
 
-Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, sequential-request isolation coverage, typed XML request core/bounded transport, secure typed response parsing, the explicit user-initiated XML client call, and semantic unstyled XML result components are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
+Status: configuration, opt-in spider context, crawler-markup renderer/directives, hosted search UI, conservative route annotation middleware, sequential-request isolation coverage, typed XML request core/bounded transport, secure typed response parsing, the explicit user-initiated XML client call, semantic unstyled XML result components, and immutable simple-query builder ergonomics are implemented. Remote contract fixture acquisition remains pending; no live service is used by normal tests.
 
-Next: add package fake/assertion support and query-builder ergonomics around the explicit client; keep remote contract acquisition pending until an operator supplies a subscribed account/query.
+Next: add package fake/assertion support and manually gated live-contract coverage; keep remote contract acquisition pending until an operator supplies a subscribed account/query.
 
 ## Milestone 0 — decisions and contract fixtures
 

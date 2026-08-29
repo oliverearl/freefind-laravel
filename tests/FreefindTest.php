@@ -6,6 +6,7 @@ use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Freefind;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Xml\FreefindXmlClient;
+use Freefind\Freefind\Search\Xml\XmlSearchQuery;
 
 beforeEach(function (): void {
     $this->freefind = resolve(Freefind::class);
@@ -21,7 +22,8 @@ it('exposes the configured account and string site id', function (): void {
     expect($freefind->siteId())->toBe('0012345')
         ->and($freefind->account()->siteId)->toBe('0012345')
         ->and($freefind->hostedSearch())->toBeInstanceOf(HostedSearch::class)
-        ->and($freefind->xml())->toBeInstanceOf(FreefindXmlClient::class);
+        ->and($freefind->xml())->toBeInstanceOf(FreefindXmlClient::class)
+        ->and($freefind->search('query'))->toBeInstanceOf(XmlSearchQuery::class);
 });
 
 it('reports a request as a spider only through the request-local context', function (): void {

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Freefind\Freefind\Search\Xml;
 
 use Freefind\Freefind\Contracts\SearchTransport;
+use Freefind\Freefind\Contracts\SearchClient;
 use Freefind\Freefind\Contracts\XmlResponseParser;
 use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 use Freefind\Freefind\Search\Xml\Response\SearchResults;
 
-final class FreefindXmlClient
+final class FreefindXmlClient implements SearchClient
 {
     public function __construct(
         private readonly SearchTransport $transport,

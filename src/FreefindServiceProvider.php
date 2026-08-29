@@ -7,6 +7,7 @@ namespace Freefind\Freefind;
 use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Configuration\HttpSettings;
 use Freefind\Freefind\Configuration\SpiderSettings;
+use Freefind\Freefind\Contracts\SearchClient;
 use Freefind\Freefind\Contracts\SearchTransport;
 use Freefind\Freefind\Contracts\XmlResponseParser;
 use Freefind\Freefind\Http\Middleware\AddFreefindAnnotations;
@@ -82,6 +83,9 @@ class FreefindServiceProvider extends PackageServiceProvider
             FreefindXmlResponseParser::class,
         ));
         $this->app->bind(FreefindXmlClient::class);
+        $this->app->bind(SearchClient::class, fn(Application $app): SearchClient => $app->make(
+            FreefindXmlClient::class,
+        ));
 
         $this->app->singleton(HtmlCommentEscaper::class);
         $this->app->bind(MarkupState::class, function (Application $app): MarkupState {
