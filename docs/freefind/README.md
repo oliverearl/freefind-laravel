@@ -2,6 +2,8 @@
 
 This documentation was downloaded from the FreeFind user area on 29 August 2026 and curated for inclusion in this repository.
 
+The library design derived from this source material is in the [project planning pack](../planning/README.md).
+
 ## About FreeFind
 
 [FreeFind](https://www.freefind.com/) is a hosted website-search service. Its homepage says it has provided site search to more than 200,000 websites since 1998; features include on-demand and scheduled re-indexing, configurable search-result presentation, protected-content indexing, and an API.
