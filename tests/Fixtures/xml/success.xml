@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ret>
+    <sts>0</sts>
+    <srch>
+        <nttl>12</nttl>
+        <nret>2</nret>
+        <idx>0</idx>
+        <q>blade directive</q>
+        <qe>blade+directive</qe>
+        <ss><s>manuals</s><s>releases</s></ss>
+        <aor>1</aor>
+        <items>
+            <i>
+                <n>1</n>
+                <t>How to use <b>Blade</b></t>
+                <d><![CDATA[Use <b>Blade</b> directives in your templates.]]></d>
+                <u>https://example.test/manuals/blade</u>
+                <tg>_blank</tg>
+                <du>example.test/manuals/blade</du>
+                <dt>2024-01-02 03:04:05 GMT</dt>
+            </i>
+            <i>
+                <n>2</n>
+                <t>Release notes</t>
+                <d>Recent package releases.</d>
+                <u>https://example.test/releases</u>
+                <tg></tg>
+                <du>example.test/releases</du>
+                <dt></dt>
+            </i>
+        </items>
+    </srch>
+</ret>

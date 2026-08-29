@@ -8,6 +8,7 @@ use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Configuration\HttpSettings;
 use Freefind\Freefind\Configuration\SpiderSettings;
 use Freefind\Freefind\Contracts\SearchTransport;
+use Freefind\Freefind\Contracts\XmlResponseParser;
 use Freefind\Freefind\Http\Middleware\AddFreefindAnnotations;
 use Freefind\Freefind\Http\Middleware\DetectFreefindSpider;
 use Freefind\Freefind\Markup\AnnotationCollector;
@@ -16,6 +17,7 @@ use Freefind\Freefind\Markup\MarkupState;
 use Freefind\Freefind\Markup\Renderer;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Xml\Transport\LaravelXmlSearchTransport;
+use Freefind\Freefind\Search\Xml\Response\FreefindXmlResponseParser;
 use Freefind\Freefind\View\Components\SearchForm;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
@@ -68,6 +70,10 @@ class FreefindServiceProvider extends PackageServiceProvider
         $this->app->bind(LaravelXmlSearchTransport::class);
         $this->app->bind(SearchTransport::class, fn(Application $app): SearchTransport => $app->make(
             LaravelXmlSearchTransport::class,
+        ));
+        $this->app->bind(FreefindXmlResponseParser::class);
+        $this->app->bind(XmlResponseParser::class, fn(Application $app): XmlResponseParser => $app->make(
+            FreefindXmlResponseParser::class,
         ));
 
         $this->app->singleton(HtmlCommentEscaper::class);

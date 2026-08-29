@@ -1,6 +1,6 @@
 # XML search request core
 
-The package's XML integration is for subscribed regular Page Search accounts only. The current milestone provides typed request models, deterministic HTTPS URL encoding, and a bounded Laravel HTTP transport; the tolerant response parser and result models are still being implemented. Do not treat these request objects and transport as a complete server-side XML client yet.
+The package's XML integration is for subscribed regular Page Search accounts only. The current milestone provides typed request models, deterministic HTTPS URL encoding, a bounded Laravel HTTP transport, and a tolerant response parser with typed result models. High-level client composition and result views are separate remaining work; do not treat these lower-level objects as a complete server-side XML client.
 
 FreeFind documents the XML feed as available only in response to a user entering a search term. Do not use it for scheduled, robotic, speculative, bulk, or prefetch queries. DataSearch and web-wide XML search are outside this package's scope.
 
@@ -31,8 +31,16 @@ $url = (new XmlRequestEncoder)->url($request);
 
 The returned `XmlSearchUrl` is a validated HTTPS value object. It can be cast to a string or read through `value`. Query fields use `application/x-www-form-urlencoded` encoding, so spaces become `+` and multiple sections remain repeated `s=value` fields rather than PHP bracket syntax.
 
+## Parsed responses
+
+The parser accepts a successful `<ret>` response without enabling DTD or entity expansion. It maps status codes 1–4 to distinct exceptions, rejects unknown non-zero statuses, and tolerates absent optional search containers and fields. Result click URLs must be absolute `http` or `https` URLs, and link targets are restricted to normal browsing-context names.
+
+Successful results expose counts, the returned query, searched sections, the automatic-any flag, spelling text, immutable result items, and local pagination offsets. Pagination is calculated from the validated request window rather than trusting FreeFind's remote `pl`, `nl`, or `spelll` links.
+
+Result titles, descriptions, and display URLs are available as safe plain-text fields for normal Blade escaping. `raw` separately preserves the remote highlight-bearing title, description, and display URL values. These raw fields are untrusted remote data and must be sanitized before deliberate HTML rendering; the package never wraps them in `HtmlString` automatically.
+
 ## Deliberate boundaries
 
-The request core does not expose deprecated `id`/`ics` fields, `xslt`, DTD enablement, or `search=web`. It does not cache or schedule searches. The transport uses HTTPS, short configured timeouts, no application cookies or authorization headers, one retry for connection/transient-server failures, no automatic redirect following, and a response-size limit. A request is sent only when its explicit transport method is called. It returns a bounded transport response; status mapping and XML parsing belong to the next milestone.
+The request core does not expose deprecated `id`/`ics` fields, `xslt`, DTD enablement, or `search=web`. It does not cache or schedule searches. The transport uses HTTPS, short configured timeouts, no application cookies or authorization headers, one retry for connection/transient-server failures, no automatic redirect following, and a response-size limit. A request is sent only when its explicit transport method is called. High-level client composition, exception orchestration, and semantic result views remain separate from this parser boundary.
 
 FreeFind result fields are documented as HTML and may contain highlight markup. The eventual package result model will keep safe plain text separate from explicitly raw, untrusted fields; do not render remote XML values as trusted HTML.
