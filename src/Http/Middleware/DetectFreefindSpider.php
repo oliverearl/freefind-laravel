@@ -15,14 +15,24 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+/**
+ * Detects FreeFind spiders and applies an opt-in cache policy to eligible HTML responses.
+ *
+ * The detected context is informational and never grants access to protected content.
+ */
 final class DetectFreefindSpider
 {
+    /**
+     * Creates middleware with the configured detector and response policy.
+     */
     public function __construct(
         private readonly SpiderDetector $detector,
         private readonly SpiderSettings $settings,
     ) {}
 
     /**
+     * Stores request-scoped detection state and applies cache policy after the response is built.
+     *
      * @param  Closure(Request): mixed  $next
      */
     public function handle(Request $request, Closure $next): mixed
@@ -43,6 +53,9 @@ final class DetectFreefindSpider
         return $response;
     }
 
+    /**
+     * Determines whether the response is an unencoded, non-streamed HTML response.
+     */
     private function canApplyCachePolicy(mixed $response): bool
     {
         if (

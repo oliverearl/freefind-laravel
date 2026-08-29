@@ -7,9 +7,14 @@ namespace Freefind\Freefind\Markup;
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Illuminate\Support\Str;
 
+/**
+ * An absolute, credential-free HTTP or HTTPS URL accepted by FreeFind markup.
+ */
 final readonly class AbsoluteUrl
 {
     /**
+     * Validates an absolute URL for use in crawler annotations.
+     *
      * @throws InvalidMarkupException When the URL is not an absolute HTTP(S) URL.
      */
     public function __construct(public string $value)
@@ -35,6 +40,8 @@ final readonly class AbsoluteUrl
     }
 
     /**
+     * Normalizes an existing value object or validates a URL string.
+     *
      * @throws InvalidMarkupException When the URL is not an absolute HTTP(S) URL.
      */
     public static function from(string|self $url): self
@@ -42,6 +49,9 @@ final readonly class AbsoluteUrl
         return $url instanceof self ? $url : new self($url);
     }
 
+    /**
+     * Returns the validated URL string.
+     */
     public function __toString(): string
     {
         return $this->value;

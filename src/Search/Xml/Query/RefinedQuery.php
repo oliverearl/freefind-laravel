@@ -6,8 +6,16 @@ namespace Freefind\Freefind\Search\Xml\Query;
 
 use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
+/**
+ * A simple query refined using the query submitted immediately before it.
+ */
 final readonly class RefinedQuery
 {
+    /**
+     * Creates a refined query with a non-empty, validated previous query.
+     *
+     * @throws InvalidSearchRequestException When the previous query is empty or unsafe.
+     */
     public function __construct(
         public SimpleQuery $query,
         public string $previousQuery,
@@ -22,6 +30,8 @@ final readonly class RefinedQuery
     }
 
     /**
+     * Returns the refined query and previous-query fields as request pairs.
+     *
      * @return list<array{0: string, 1: string}>
      */
     public function pairs(): array

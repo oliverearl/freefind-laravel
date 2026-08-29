@@ -142,6 +142,12 @@ Decision: name every package-owned exception with the `Exception` suffix and enf
 
 Why: the suffix makes thrown types immediately recognizable at call sites and keeps the exception namespace consistent before the first published release.
 
+### D24 — Public PHPDoc follows a contract-first documentation standard
+
+Decision: provide meaningful descriptions for public classes, methods, and constants, document observable exceptions with `@throws`, omit `@param` tags that merely repeat proper native parameter types, and use detailed PHPDoc shapes for arrays, callables, and other contracts that native type hints cannot express. Document non-obvious helpers when their behavior or failure modes need explanation, and keep the documentation synchronized with implementation and static-analysis expectations.
+
+Why: consumers need useful IDE and API guidance without repetitive noise, while array shapes, callable signatures, and failure behavior are otherwise easy to misunderstand.
+
 ## Later DataSearch context
 
 What is already known from FreeFind's documentation:

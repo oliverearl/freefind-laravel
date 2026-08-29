@@ -9,12 +9,20 @@ use Freefind\Freefind\Search\Xml\Response\SearchWindow;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+/**
+ * Semantic previous/next navigation for a SearchWindow.
+ */
 final class Pagination extends Component
 {
     public readonly ?NavigationUrl $previousUrl;
 
     public readonly ?NavigationUrl $nextUrl;
 
+    /**
+     * Creates pagination controls with optional safe navigation URLs and labels.
+     *
+     * @throws InvalidMarkupException When a URL or label is invalid.
+     */
     public function __construct(
         public SearchWindow $window,
         string|NavigationUrl|null $previousUrl = null,
@@ -37,6 +45,9 @@ final class Pagination extends Component
         }
     }
 
+    /**
+     * Returns the package's semantic pagination view.
+     */
     public function render(): View
     {
         return view('freefind-laravel::components.pagination');

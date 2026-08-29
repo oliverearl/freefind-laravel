@@ -7,8 +7,16 @@ namespace Freefind\Freefind\Markup;
 use DateTimeInterface;
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
+/**
+ * Optional date, icon, and comment metadata for a FreeFind what's-new annotation.
+ */
 final readonly class WhatsNewEntry
 {
+    /**
+     * Creates a what's-new entry with at least one safe value.
+     *
+     * @throws InvalidMarkupException When no value is supplied or the comment is empty or unsafe.
+     */
     public function __construct(
         public ?DateTimeInterface $date = null,
         public ?AbsoluteUrl $icon = null,
@@ -27,6 +35,11 @@ final readonly class WhatsNewEntry
         }
     }
 
+    /**
+     * Creates a what's-new entry from an icon string or existing absolute URL.
+     *
+     * @throws InvalidMarkupException When no value is supplied or an icon/comment is invalid.
+     */
     public static function from(
         ?DateTimeInterface $date = null,
         string|AbsoluteUrl|null $icon = null,

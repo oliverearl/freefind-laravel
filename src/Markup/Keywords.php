@@ -6,6 +6,9 @@ namespace Freefind\Freefind\Markup;
 
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
+/**
+ * Ordered keywords and their FreeFind relevance weight.
+ */
 final readonly class Keywords
 {
     /**
@@ -16,7 +19,11 @@ final readonly class Keywords
     public int $count;
 
     /**
-     * @param  array<mixed>  $words
+     * Creates a validated keyword list and relevance weight.
+     *
+     * @param  array<array-key, mixed>  $words  Values are validated as an ordered list of safe, non-empty strings.
+     *
+     * @throws InvalidMarkupException When the list or weight is outside the supported range or contains unsafe text.
      */
     public function __construct(array $words, int $count)
     {
@@ -46,7 +53,11 @@ final readonly class Keywords
     }
 
     /**
-     * @param  array<mixed>  $words
+     * Creates keywords, defaulting the weight to the number of supplied words.
+     *
+     * @param  array<array-key, mixed>  $words  Values are validated as an ordered list of safe, non-empty strings.
+     *
+     * @throws InvalidMarkupException When a word or the derived weight is invalid.
      */
     public static function from(array $words, ?int $count = null): self
     {

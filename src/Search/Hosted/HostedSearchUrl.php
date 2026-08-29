@@ -6,8 +6,16 @@ namespace Freefind\Freefind\Search\Hosted;
 
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
+/**
+ * A validated HTTPS URL generated for FreeFind's hosted Page Search endpoints.
+ */
 final readonly class HostedSearchUrl
 {
+    /**
+     * Validates a generated hosted-search URL.
+     *
+     * @throws InvalidMarkupException When the URL is not a credential-free HTTPS URL.
+     */
     public function __construct(public string $value)
     {
         $parts = parse_url($this->value);
@@ -24,6 +32,9 @@ final readonly class HostedSearchUrl
         }
     }
 
+    /**
+     * Returns the URL string.
+     */
     public function __toString(): string
     {
         return $this->value;

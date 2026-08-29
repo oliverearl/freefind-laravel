@@ -12,12 +12,16 @@ use Freefind\Freefind\Search\Hosted\Section;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+/**
+ * Accessible, unstyled form that submits searches to FreeFind's hosted endpoint.
+ */
 final class SearchForm extends Component
 {
     /**
-     * @param  array<array-key, mixed>  $sections
-     */
-    /**
+     * Creates a hosted-search form with validated labels, sections, and browser target.
+     *
+     * @param  array<array-key, mixed>  $sections  Map of FreeFind section IDs to display labels; entries are validated at runtime.
+     *
      * @throws InvalidMarkupException When a form value is unsafe or invalid.
      */
     public function __construct(
@@ -64,11 +68,19 @@ final class SearchForm extends Component
         }
     }
 
+    /**
+     * Returns the configured hosted-search form action URL.
+     */
     public function action(): string
     {
         return $this->search->formAction()->value;
     }
 
+    /**
+     * Returns the explicit query or a validated query from the current request.
+     *
+     * @throws InvalidMarkupException When the request query contains invalid text.
+     */
     public function queryValue(): string
     {
         if ($this->query !== null) {
@@ -80,6 +92,11 @@ final class SearchForm extends Component
         return is_string($query) ? $this->safeQuery($query) : '';
     }
 
+    /**
+     * Returns the normalized language code for the form, if configured.
+     *
+     * @throws InvalidMarkupException When a configured language is not supported or syntactically valid.
+     */
     public function languageValue(): ?string
     {
         return $this->language instanceof Language
@@ -88,7 +105,11 @@ final class SearchForm extends Component
     }
 
     /**
+     * Converts the configured section map into validated option values.
+     *
      * @return list<Section>
+     *
+     * @throws InvalidMarkupException When a section ID or label is invalid.
      */
     public function sectionOptions(): array
     {
@@ -105,6 +126,11 @@ final class SearchForm extends Component
         return $options;
     }
 
+    /**
+     * Validates query text before it is placed in an HTML input.
+     *
+     * @throws InvalidMarkupException When the query contains invalid UTF-8 or controls.
+     */
     private function safeQuery(string $query): string
     {
         if (preg_match('//u', $query) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $query) === 1) {
@@ -115,6 +141,8 @@ final class SearchForm extends Component
     }
 
     /**
+     * Returns string-valued section selections from the current request.
+     *
      * @return list<string>
      */
     public function selectedSections(): array
@@ -133,6 +161,9 @@ final class SearchForm extends Component
         return array_values(array_filter($sections, 'is_string'));
     }
 
+    /**
+     * Returns the package's semantic hosted-search form view.
+     */
     public function render(): View
     {
         return view('freefind-laravel::components.search-form');

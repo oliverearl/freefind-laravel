@@ -9,8 +9,16 @@ use Freefind\Freefind\Markup\AbsoluteUrl;
 use Freefind\Freefind\Markup\BrowsingContextName;
 use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
 
+/**
+ * One safely normalized result returned by FreeFind's XML Page Search feed.
+ */
 final readonly class SearchResult
 {
+    /**
+     * Creates a result after validating its number and link target.
+     *
+     * @throws MalformedXmlResponseException When the result number or target is invalid.
+     */
     public function __construct(
         public ?int $number,
         public string $title,

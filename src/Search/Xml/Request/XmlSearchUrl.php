@@ -6,8 +6,16 @@ namespace Freefind\Freefind\Search\Xml\Request;
 
 use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
+/**
+ * A validated HTTPS URL for the FreeFind XML search endpoint.
+ */
 final readonly class XmlSearchUrl
 {
+    /**
+     * Validates an XML-search URL before transport uses it.
+     *
+     * @throws InvalidSearchRequestException When the URL is not a credential-free HTTPS URL.
+     */
     public function __construct(public string $value)
     {
         $parts = parse_url($this->value);
@@ -24,6 +32,9 @@ final readonly class XmlSearchUrl
         }
     }
 
+    /**
+     * Returns the URL string.
+     */
     public function __toString(): string
     {
         return $this->value;

@@ -6,8 +6,16 @@ namespace Freefind\Freefind\Search\Xml\Response;
 
 use Freefind\Freefind\Exceptions\MalformedXmlResponseException;
 
+/**
+ * A spelling correction suggested by FreeFind for the submitted query.
+ */
 final readonly class SpellingSuggestion
 {
+    /**
+     * Creates a non-empty spelling suggestion.
+     *
+     * @throws MalformedXmlResponseException When the suggested query is empty.
+     */
     public function __construct(
         public string $query,
         public ?string $encodedQuery = null,

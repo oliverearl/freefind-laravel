@@ -7,8 +7,16 @@ namespace Freefind\Freefind\View\Components;
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Illuminate\Support\Str;
 
+/**
+ * A safe absolute HTTP(S) or root-relative URL for result navigation.
+ */
 final readonly class NavigationUrl
 {
+    /**
+     * Validates a URL used by a package-rendered navigation link.
+     *
+     * @throws InvalidMarkupException When the URL is malformed, credential-bearing, or uses an unsafe scheme.
+     */
     public function __construct(public string $value)
     {
         if (
@@ -36,11 +44,19 @@ final readonly class NavigationUrl
         }
     }
 
+    /**
+     * Normalizes an existing navigation URL or validates a URL string.
+     *
+     * @throws InvalidMarkupException When the URL is invalid.
+     */
     public static function from(string|self $url): self
     {
         return $url instanceof self ? $url : new self($url);
     }
 
+    /**
+     * Returns the URL string.
+     */
     public function __toString(): string
     {
         return $this->value;

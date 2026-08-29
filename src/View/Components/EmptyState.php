@@ -8,8 +8,16 @@ use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+/**
+ * Semantic empty-state message for a result list with no matches.
+ */
 final class EmptyState extends Component
 {
+    /**
+     * Creates an empty-state component with safe display text.
+     *
+     * @throws InvalidMarkupException When the message is empty or contains unsafe text.
+     */
     public function __construct(public string $message = 'No results found.')
     {
         if (
@@ -21,6 +29,9 @@ final class EmptyState extends Component
         }
     }
 
+    /**
+     * Returns the package's semantic empty-state view.
+     */
     public function render(): View
     {
         return view('freefind-laravel::components.empty-state');

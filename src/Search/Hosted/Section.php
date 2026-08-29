@@ -7,8 +7,16 @@ namespace Freefind\Freefind\Search\Hosted;
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use Illuminate\Support\Str;
 
+/**
+ * A labeled section identifier for hosted or XML Page Search requests.
+ */
 final readonly class Section
 {
+    /**
+     * Creates a validated section identifier and display label.
+     *
+     * @throws InvalidMarkupException When the identifier is reserved or malformed, or the label is unsafe.
+     */
     public function __construct(public string $id, public string $label)
     {
         if ($this->id !== '' && ! preg_match('/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/', $this->id)) {
@@ -28,6 +36,11 @@ final readonly class Section
         }
     }
 
+    /**
+     * Creates a validated section value object.
+     *
+     * @throws InvalidMarkupException When the identifier is reserved or malformed, or the label is unsafe.
+     */
     public static function from(string $id, string $label): self
     {
         return new self($id, $label);

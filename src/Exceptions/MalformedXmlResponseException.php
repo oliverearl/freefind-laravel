@@ -6,4 +6,7 @@ namespace Freefind\Freefind\Exceptions;
 
 use RuntimeException;
 
+/**
+ * Indicates malformed, unsafe, or structurally unexpected FreeFind XML.
+ */
 final class MalformedXmlResponseException extends RuntimeException {}

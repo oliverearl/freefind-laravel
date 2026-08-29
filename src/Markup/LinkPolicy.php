@@ -6,8 +6,16 @@ namespace Freefind\Freefind\Markup;
 
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
+/**
+ * Page or site-wide policy controlling how FreeFind follows links.
+ */
 final readonly class LinkPolicy
 {
+    /**
+     * Creates a policy with at least one supported crawler-link setting.
+     *
+     * @throws InvalidMarkupException When no setting is supplied or a setting is unsupported.
+     */
     public function __construct(
         public ?string $queries = null,
         public ?string $scripts = null,
@@ -22,6 +30,11 @@ final readonly class LinkPolicy
         self::validate($this->robots, ['honour', 'ignore'], 'robots');
     }
 
+    /**
+     * Creates a link policy from its optional crawler settings.
+     *
+     * @throws InvalidMarkupException When no setting is supplied or a setting is unsupported.
+     */
     public static function from(
         ?string $queries = null,
         ?string $scripts = null,
@@ -31,7 +44,11 @@ final readonly class LinkPolicy
     }
 
     /**
+     * Validates one policy value against the values supported for its field.
+     *
      * @param  list<string>  $allowed
+     *
+     * @throws InvalidMarkupException When a non-null value is not in the allowed list.
      */
     private static function validate(?string $value, array $allowed, string $name): void
     {

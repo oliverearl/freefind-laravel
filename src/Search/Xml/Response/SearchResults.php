@@ -6,11 +6,18 @@ namespace Freefind\Freefind\Search\Xml\Response;
 
 use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
+/**
+ * Immutable, typed representation of one successful FreeFind XML response.
+ */
 final readonly class SearchResults
 {
     /**
+     * Creates a response model with normalized sections, results, and pagination.
+     *
      * @param  list<string>  $sections
      * @param  list<SearchResult>  $items
+     *
+     * @throws InvalidSearchRequestException When a result count or offset is negative.
      */
     public function __construct(
         public FreefindStatus $status,

@@ -6,6 +6,9 @@ namespace Freefind\Freefind\Markup;
 
 use Freefind\Freefind\Exceptions\InvalidMarkupException;
 
+/**
+ * Ordered absolute URLs explicitly supplied to FreeFind's link-discovery marker.
+ */
 final readonly class ExplicitLinks
 {
     /**
@@ -14,7 +17,11 @@ final readonly class ExplicitLinks
     public array $urls;
 
     /**
-     * @param  array<mixed>  $urls
+     * Creates a validated, ordered collection of absolute URLs.
+     *
+     * @param  array<array-key, mixed>  $urls  Values are validated as an ordered list of absolute URLs before storage.
+     *
+     * @throws InvalidMarkupException When the list is empty, too large, or contains an invalid value.
      */
     public function __construct(array $urls)
     {
@@ -31,7 +38,11 @@ final readonly class ExplicitLinks
     }
 
     /**
-     * @param  array<mixed>  $urls
+     * Converts URL strings and existing URL values into an explicit-links collection.
+     *
+     * @param  array<array-key, mixed>  $urls  URL strings and existing absolute-URL values are accepted in list order.
+     *
+     * @throws InvalidMarkupException When a value is not a string or an absolute URL.
      */
     public static function from(array $urls): self
     {

@@ -6,10 +6,17 @@ namespace Freefind\Freefind\Configuration;
 
 use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
+/**
+ * Request middleware and user-agent settings for optional spider detection.
+ */
 final readonly class SpiderSettings
 {
     /**
-     * @param  list<string>  $userAgents
+     * Creates validated spider-detection settings.
+     *
+     * @param  list<string>  $userAgents  Case-insensitive user-agent fragments to recognize.
+     *
+     * @throws InvalidConfigurationException When no signatures, invalid signatures, or an empty cache policy is provided.
      */
     public function __construct(
         public bool $middleware = false,
@@ -32,7 +39,11 @@ final readonly class SpiderSettings
     }
 
     /**
+     * Builds spider settings from the package configuration array.
+     *
      * @param  array<string, mixed>  $config
+     *
+     * @throws InvalidConfigurationException When a configured value has the wrong type or violates the settings contract.
      */
     public static function fromConfig(array $config): self
     {

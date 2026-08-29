@@ -22,12 +22,31 @@ use Illuminate\Support\Str;
 use SimpleXMLElement;
 use Throwable;
 
+/**
+ * Securely parses bounded FreeFind XML responses into typed result models.
+ */
 final class FreefindXmlResponseParser implements XmlResponseParser
 {
+    /**
+     * Maximum number of XML elements accepted in one response tree.
+     */
     private const int MAX_ELEMENTS = 10000;
 
+    /**
+     * Creates a parser with the configured response-size limit.
+     */
     public function __construct(private readonly HttpSettings $settings) {}
 
+    /**
+     * Parses a successful XML response and maps service statuses to package exceptions.
+     *
+     * @throws SearchTransportException When the HTTP status or response size is invalid.
+     * @throws MalformedXmlResponseException When the XML structure or a result field is invalid.
+     * @throws FreefindServiceException When FreeFind returns an unknown or general service status.
+     * @throws UnauthorizedXmlFeedException When the account is not authorized for XML search.
+     * @throws InvalidOrClosedAccountException When the account is invalid or closed.
+     * @throws RejectedSearchParametersException When FreeFind rejects the request parameters.
+     */
     public function parse(XmlTransportResponse $response, XmlSearchRequest $request): SearchResults
     {
         if ($response->status < 200 || $response->status > 299) {
@@ -80,6 +99,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         );
     }
 
+    /**
+     * Loads XML without allowing external entities or network access.
+     *
+     * @throws MalformedXmlResponseException When the response is not well-formed XML.
+     */
     private function loadXml(string $body): SimpleXMLElement
     {
         $previous = libxml_use_internal_errors(true);
@@ -98,6 +122,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return $xml;
     }
 
+    /**
+     * Counts descendants and rejects unexpectedly large element trees.
+     *
+     * @throws MalformedXmlResponseException When the element tree exceeds the safety limit.
+     */
     private function assertElementCount(SimpleXMLElement $element): int
     {
         $count = 1;
@@ -113,6 +142,14 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return $count;
     }
 
+    /**
+     * Converts a non-success FreeFind status into its public exception type.
+     *
+     * @throws FreefindServiceException For general or unexpected service errors.
+     * @throws UnauthorizedXmlFeedException For an unauthorized XML feed.
+     * @throws InvalidOrClosedAccountException For an invalid or closed account.
+     * @throws RejectedSearchParametersException For rejected search parameters.
+     */
     private function throwForStatus(FreefindStatus $status): never
     {
         throw match ($status) {
@@ -125,6 +162,8 @@ final class FreefindXmlResponseParser implements XmlResponseParser
     }
 
     /**
+     * Reads the response's returned section identifiers.
+     *
      * @return list<string>
      */
     private function sections(?SimpleXMLElement $search): array
@@ -143,7 +182,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
     }
 
     /**
+     * Parses all result items in the response.
+     *
      * @return list<SearchResult>
+     *
+     * @throws MalformedXmlResponseException When a result contains an invalid URL, target, or field.
      */
     private function items(?SimpleXMLElement $search): array
     {
@@ -160,6 +203,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return $items;
     }
 
+    /**
+     * Converts one XML result item into its safe and raw representations.
+     *
+     * @throws MalformedXmlResponseException When the result URL, target, or scalar data is invalid.
+     */
     private function item(SimpleXMLElement $item): SearchResult
     {
         $url = $this->text($item, 'u');
@@ -197,6 +245,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         );
     }
 
+    /**
+     * Reads an optional spelling suggestion from the search element.
+     *
+     * @throws MalformedXmlResponseException When the suggestion is present but invalid.
+     */
     private function spelling(?SimpleXMLElement $search): ?SpellingSuggestion
     {
         $query = $this->text($search, 'spell');
@@ -208,6 +261,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return new SpellingSuggestion($query, $this->text($search, 'spelle'));
     }
 
+    /**
+     * Reads a `0`/`1` XML boolean, treating an absent field as false.
+     *
+     * @throws MalformedXmlResponseException When the field contains another value.
+     */
     private function boolean(?SimpleXMLElement $parent, string $name): bool
     {
         $value = $this->text($parent, $name);
@@ -223,6 +281,11 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return trim($value) === '1';
     }
 
+    /**
+     * Reads a non-negative XML integer, optionally requiring the field to exist.
+     *
+     * @throws MalformedXmlResponseException When a required field is absent or a value is not a non-negative integer.
+     */
     private function integer(?SimpleXMLElement $parent, string $name, bool $required = false): ?int
     {
         $value = $this->text($parent, $name);
@@ -244,6 +307,9 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return (int) $value;
     }
 
+    /**
+     * Reads the text content of an optional child element.
+     */
     private function text(?SimpleXMLElement $parent, string $name): ?string
     {
         if ($parent === null || ! isset($parent->{$name}[0])) {
@@ -253,6 +319,9 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return (string) $parent->{$name}[0];
     }
 
+    /**
+     * Reads an XML field and removes remote markup for safe plain-text display.
+     */
     private function plain(?SimpleXMLElement $parent, string $name): ?string
     {
         $value = $this->raw($parent, $name);
@@ -260,6 +329,9 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return $value === null ? null : strip_tags($value);
     }
 
+    /**
+     * Reads an XML field while preserving its remote highlight markup as untrusted text.
+     */
     private function raw(?SimpleXMLElement $parent, string $name): ?string
     {
         if ($parent === null || ! isset($parent->{$name}[0])) {
@@ -288,6 +360,9 @@ final class FreefindXmlResponseParser implements XmlResponseParser
         return html_entity_decode($value, ENT_QUOTES | ENT_XML1, 'UTF-8');
     }
 
+    /**
+     * Parses an optional result date through Laravel's configured date factory.
+     */
     private function date(?string $value): ?DateTimeInterface
     {
         if ($value === null || trim($value) === '') {

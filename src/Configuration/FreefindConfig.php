@@ -6,8 +6,14 @@ namespace Freefind\Freefind\Configuration;
 
 use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
+/**
+ * Immutable, validated configuration for the package's Page Search integration.
+ */
 final readonly class FreefindConfig
 {
+    /**
+     * Creates an immutable package configuration from validated sections.
+     */
     public function __construct(
         public Account $account,
         public HttpSettings $http,
@@ -15,7 +21,11 @@ final readonly class FreefindConfig
     ) {}
 
     /**
+     * Builds package configuration and validates each nested configuration section.
+     *
      * @param  array<string, mixed>  $config
+     *
+     * @throws InvalidConfigurationException When a nested configuration section is not an array or contains an invalid value.
      */
     public static function fromConfig(array $config): self
     {

@@ -10,10 +10,17 @@ use Freefind\Freefind\Search\Xml\Query\SortOrder;
 use Freefind\Freefind\Search\Xml\Query\Stemming;
 use Illuminate\Support\Str;
 
+/**
+ * Optional controls for one FreeFind XML Page Search request.
+ */
 final readonly class SearchOptions
 {
     /**
-     * @param  array<array-key, mixed>  $sections
+     * Creates validated search options and pagination bounds.
+     *
+     * @param  array<array-key, mixed>  $sections  Values are validated as ordered section identifiers.
+     *
+     * @throws InvalidSearchRequestException When pagination or a section identifier is invalid.
      */
     public function __construct(
         public bool $accentSensitive = false,
@@ -53,6 +60,8 @@ final readonly class SearchOptions
     }
 
     /**
+     * Returns the non-default options as ordered FreeFind request pairs.
+     *
      * @return list<array{0: string, 1: string}>
      */
     public function pairs(): array

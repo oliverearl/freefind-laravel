@@ -13,16 +13,28 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\RequestException;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 use Throwable;
 
+/**
+ * Sends bounded, non-redirecting XML requests through Laravel's HTTP client.
+ */
 final class LaravelXmlSearchTransport implements SearchTransport
 {
+    /**
+     * Creates a transport with bounded HTTP settings and XML request encoding.
+     */
     public function __construct(
         private readonly Factory $http,
         private readonly HttpSettings $settings,
         private readonly XmlRequestEncoder $encoder,
     ) {}
 
+    /**
+     * Sends one user-initiated XML search and returns its bounded response body.
+     *
+     * @throws SearchTransportException When transport fails, redirects, returns a non-2xx status, or exceeds a body limit.
+     */
     public function send(XmlSearchRequest $request): XmlTransportResponse
     {
         try {
@@ -55,12 +67,20 @@ final class LaravelXmlSearchTransport implements SearchTransport
         );
     }
 
+    /**
+     * Determines whether a transport exception represents a limited transient retry.
+     */
     private function shouldRetry(Throwable $exception): bool
     {
         return $exception instanceof ConnectionException
             || ($exception instanceof RequestException && $exception->response->serverError());
     }
 
+    /**
+     * Rejects a response whose declared body length already exceeds the configured bound.
+     *
+     * @throws SearchTransportException When the declared content length is too large.
+     */
     private function assertContentLength(ResponseInterface $response): void
     {
         $length = $response->getHeaderLine('Content-Length');
@@ -71,9 +91,11 @@ final class LaravelXmlSearchTransport implements SearchTransport
     }
 
     /**
-     * @param  \Psr\Http\Message\StreamInterface  $body
+     * Reads a response stream incrementally so the size limit also covers chunked bodies.
+     *
+     * @throws SearchTransportException When the body exceeds the configured size limit.
      */
-    private function readBody($body): string
+    private function readBody(StreamInterface $body): string
     {
         $contents = '';
 

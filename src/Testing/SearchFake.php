@@ -11,6 +11,9 @@ use Freefind\Freefind\Search\Xml\Request\XmlSearchRequest;
 use Freefind\Freefind\Search\Xml\Transport\XmlTransportResponse;
 use RuntimeException;
 
+/**
+ * Fixture-backed XML transport that records the searches made by a test.
+ */
 final class SearchFake implements SearchTransport
 {
     /**
@@ -24,7 +27,11 @@ final class SearchFake implements SearchTransport
     private array $sent = [];
 
     /**
+     * Creates a fake transport from unique, loaded search fixtures.
+     *
      * @param  list<mixed>  $fixtures
+     *
+     * @throws InvalidSearchRequestException When an entry is not a loaded fixture or queries are duplicated.
      */
     public function __construct(array $fixtures)
     {
@@ -43,6 +50,11 @@ final class SearchFake implements SearchTransport
         }
     }
 
+    /**
+     * Records a request and returns the fixture matching its effective query.
+     *
+     * @throws RuntimeException When no fixture matches the request query.
+     */
     public function send(XmlSearchRequest $request): XmlTransportResponse
     {
         $sent = SentSearch::from($request);
@@ -56,6 +68,13 @@ final class SearchFake implements SearchTransport
         return new XmlTransportResponse(200, $fixture->body, ['Content-Type' => ['application/xml']]);
     }
 
+    /**
+     * Asserts that at least one recorded search satisfies the supplied predicate.
+     *
+     * @param  Closure(SentSearch): bool  $predicate
+     *
+     * @throws RuntimeException When no recorded search satisfies the predicate.
+     */
     public function assertSearched(Closure $predicate): void
     {
         foreach ($this->sent as $search) {

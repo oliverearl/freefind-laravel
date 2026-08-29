@@ -10,9 +10,14 @@ use Freefind\Freefind\Markup\AnnotationCollector;
 use Freefind\Freefind\Markup\Renderer;
 use Illuminate\Http\Request;
 
+/**
+ * Adds selected page annotations to the request-scoped head collector.
+ */
 final class AddFreefindAnnotations
 {
     /**
+     * Maps route-facing annotation names to renderer methods.
+     *
      * @var array<string, string>
      */
     private const array ANNOTATIONS = [
@@ -21,13 +26,20 @@ final class AddFreefindAnnotations
         'not-new' => 'notNew',
     ];
 
+    /**
+     * Creates middleware backed by the request-scoped annotation renderer.
+     */
     public function __construct(
         private readonly AnnotationCollector $collector,
         private readonly Renderer $renderer,
     ) {}
 
     /**
+     * Collects the route's annotations and passes the request onward.
+     *
      * @param  Closure(Request): mixed  $next
+     *
+     * @throws InvalidMarkupException When a route annotation name is unsupported.
      */
     public function handle(Request $request, Closure $next, string ...$annotations): mixed
     {
@@ -40,8 +52,12 @@ final class AddFreefindAnnotations
     }
 
     /**
+     * Expands comma-separated route middleware arguments into unique annotation names.
+     *
      * @param  list<string>  $annotations
      * @return list<string>
+     *
+     * @throws InvalidMarkupException When an annotation name is unsupported.
      */
     private function annotationNames(array $annotations): array
     {

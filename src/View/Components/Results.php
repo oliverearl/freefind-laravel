@@ -9,6 +9,9 @@ use Freefind\Freefind\Search\Xml\Response\SearchResults;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+/**
+ * Semantic result-list component with optional navigation and spelling links.
+ */
 final class Results extends Component
 {
     public readonly ?NavigationUrl $previousUrl;
@@ -17,6 +20,11 @@ final class Results extends Component
 
     public readonly ?NavigationUrl $spellingUrl;
 
+    /**
+     * Creates a result-list component with safe labels and navigation URLs.
+     *
+     * @throws InvalidMarkupException When a URL, label, or heading ID is invalid.
+     */
     public function __construct(
         public SearchResults $results,
         public string $heading = 'Search results',
@@ -45,6 +53,9 @@ final class Results extends Component
         }
     }
 
+    /**
+     * Returns the package's semantic result-list view.
+     */
     public function render(): View
     {
         return view('freefind-laravel::components.results');

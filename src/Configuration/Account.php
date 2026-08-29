@@ -6,14 +6,31 @@ namespace Freefind\Freefind\Configuration;
 
 use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
+/**
+ * Validated endpoints and the public site identifier for one FreeFind account.
+ */
 final readonly class Account
 {
+    /**
+     * Default HTTPS endpoint for FreeFind's hosted HTML search.
+     */
     public const string DEFAULT_HTML_ENDPOINT = 'https://search.freefind.com/find.html';
 
+    /**
+     * Default HTTPS endpoint for FreeFind's XML search.
+     */
     public const string DEFAULT_XML_ENDPOINT = 'https://search.freefind.com/find.xml';
 
+    /**
+     * Default HTTPS endpoint for FreeFind's hosted site index.
+     */
     public const string DEFAULT_INDEX_ENDPOINT = 'https://search.freefind.com/siteindex.html';
 
+    /**
+     * Creates an account and validates every configured endpoint.
+     *
+     * @throws InvalidConfigurationException When the site ID or an endpoint is invalid.
+     */
     public function __construct(
         public string $siteId,
         public string $htmlEndpoint = self::DEFAULT_HTML_ENDPOINT,
@@ -27,7 +44,11 @@ final readonly class Account
     }
 
     /**
+     * Builds an account from the package configuration array.
+     *
      * @param  array<string, mixed>  $config
+     *
+     * @throws InvalidConfigurationException When a site ID, endpoint map, or endpoint value is invalid.
      */
     public static function fromConfig(array $config): self
     {
@@ -51,6 +72,11 @@ final readonly class Account
         );
     }
 
+    /**
+     * Validates the configured public site identifier.
+     *
+     * @throws InvalidConfigurationException When the site ID is empty or contains unsafe characters.
+     */
     private static function validateSiteId(string $siteId): void
     {
         if ($siteId === '' || trim($siteId) !== $siteId || preg_match('/[\x00-\x1F\x7F]/', $siteId) === 1) {
@@ -58,6 +84,11 @@ final readonly class Account
         }
     }
 
+    /**
+     * Validates one configured account endpoint.
+     *
+     * @throws InvalidConfigurationException When the endpoint is not a credential-free HTTPS URL.
+     */
     private static function validateEndpoint(string $endpoint, string $name): void
     {
         $parts = parse_url($endpoint);
@@ -76,7 +107,11 @@ final readonly class Account
     }
 
     /**
-     * @param  array<mixed, mixed>  $endpoints
+     * Reads one endpoint from the configuration, falling back to its documented default.
+     *
+     * @param  array<string, mixed>  $endpoints
+     *
+     * @throws InvalidConfigurationException When the configured endpoint is not a string.
      */
     private static function endpoint(array $endpoints, string $name, string $default): string
     {

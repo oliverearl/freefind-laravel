@@ -6,13 +6,24 @@ namespace Freefind\Freefind\Testing;
 
 use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
+/**
+ * A query-keyed XML response fixture for deterministic search tests.
+ */
 final readonly class SearchFixture
 {
+    /**
+     * Creates an incomplete fixture that can be populated from an XML file.
+     */
     private function __construct(
         public string $query,
         public string $body,
     ) {}
 
+    /**
+     * Starts a fixture definition for one valid search query.
+     *
+     * @throws InvalidSearchRequestException When the query is empty or contains unsafe text.
+     */
     public static function for(string $query): self
     {
         if (
@@ -26,6 +37,11 @@ final readonly class SearchFixture
         return new self($query, '');
     }
 
+    /**
+     * Completes the fixture using the contents of a readable, non-empty XML file.
+     *
+     * @throws InvalidSearchRequestException When the file cannot be read or is empty.
+     */
     public function fromFile(string $path): self
     {
         if (! is_file($path) || ! is_readable($path)) {

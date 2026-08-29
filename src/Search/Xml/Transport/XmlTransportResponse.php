@@ -6,10 +6,17 @@ namespace Freefind\Freefind\Search\Xml\Transport;
 
 use Freefind\Freefind\Exceptions\SearchTransportException;
 
+/**
+ * Transport-neutral HTTP response data passed to the XML parser.
+ */
 final readonly class XmlTransportResponse
 {
     /**
+     * Creates a response value with normalized header lists.
+     *
      * @param  array<string, list<string>>  $headers
+     *
+     * @throws SearchTransportException When the HTTP status is outside the valid range.
      */
     public function __construct(
         public int $status,
@@ -21,6 +28,9 @@ final readonly class XmlTransportResponse
         }
     }
 
+    /**
+     * Returns the first value for a header name using case-insensitive lookup.
+     */
     public function header(string $name): ?string
     {
         foreach ($this->headers as $header => $values) {

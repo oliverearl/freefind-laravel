@@ -6,8 +6,16 @@ namespace Freefind\Freefind\Search\Xml\Query;
 
 use Freefind\Freefind\Exceptions\InvalidSearchRequestException;
 
+/**
+ * A validated user-entered FreeFind search query.
+ */
 final readonly class SimpleQuery
 {
+    /**
+     * Creates a simple query with the requested match mode.
+     *
+     * @throws InvalidSearchRequestException When the query is empty or contains unsafe text.
+     */
     public function __construct(
         public string $query,
         public MatchMode $matchMode = MatchMode::All,
@@ -16,6 +24,8 @@ final readonly class SimpleQuery
     }
 
     /**
+     * Returns the simple query fields as request pairs.
+     *
      * @return list<array{0: string, 1: string}>
      */
     public function pairs(): array
@@ -29,6 +39,11 @@ final readonly class SimpleQuery
         return $pairs;
     }
 
+    /**
+     * Validates the query text accepted by a simple search.
+     *
+     * @throws InvalidSearchRequestException When the query is empty or contains unsafe text.
+     */
     private static function assertQuery(string $query): void
     {
         if (

@@ -21,14 +21,23 @@ use Freefind\Freefind\View\Components\SearchForm;
 use Freefind\Freefind\View\Components\SpellingSuggestion;
 use Illuminate\Support\Facades\Blade;
 
+/**
+ * Registers the package's Blade components and crawler-markup directives.
+ */
 final class BladeRegistrar
 {
+    /**
+     * Registers all package view components and Blade directives.
+     */
     public function register(): void
     {
         $this->registerComponents();
         $this->registerDirectives();
     }
 
+    /**
+     * Registers the package's Blade components.
+     */
     private function registerComponents(): void
     {
         Blade::component(SearchForm::class, 'freefind::search-form');
@@ -39,6 +48,9 @@ final class BladeRegistrar
         Blade::component(EmptyState::class, 'freefind::empty-state');
     }
 
+    /**
+     * Registers the package's crawler-markup directives.
+     */
     private function registerDirectives(): void
     {
         Blade::directive('freefindKeywords', fn(string $expression): string => $this->valueDirective(
@@ -91,11 +103,17 @@ final class BladeRegistrar
         Blade::directive('freefindHead', fn(): string => '<?php echo app(' . AnnotationCollector::class . '::class)->render(); ?>');
     }
 
+    /**
+     * Builds compiled PHP for a renderer-backed directive.
+     */
     private function rendererDirective(string $method): string
     {
         return '<?php echo app(' . Renderer::class . '::class)->' . $method . '(); ?>';
     }
 
+    /**
+     * Builds compiled PHP for a value-object-backed directive.
+     */
     private function valueDirective(string $method, string $valueClass, string $expression): string
     {
         return '<?php echo app(' . Renderer::class . '::class)->' . $method . '(' . $valueClass . '::from(' . $expression . ')); ?>';

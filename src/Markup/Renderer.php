@@ -8,13 +8,22 @@ use Freefind\Freefind\Exceptions\InvalidMarkupException;
 use LogicException;
 use Illuminate\Support\Facades\Date;
 
+/**
+ * Renders validated value objects into FreeFind comments and meta annotations.
+ */
 final class Renderer
 {
+    /**
+     * Creates a renderer using the request-scoped escaping and region state services.
+     */
     public function __construct(
         private readonly HtmlCommentEscaper $escaper,
         private readonly MarkupState $state,
     ) {}
 
+    /**
+     * Renders the weighted keyword annotation.
+     */
     public function keywords(Keywords $keywords): string
     {
         return $this->comment(
@@ -23,31 +32,49 @@ final class Renderer
         );
     }
 
+    /**
+     * Renders the document-date meta tag in FreeFind's expected format.
+     */
     public function documentDate(DocumentDate $date): string
     {
         return '<meta name="document-date" content="' . $this->formatDate($date->date) . '">';
     }
 
+    /**
+     * Renders the page-level no-index annotation.
+     */
     public function noIndexPage(): string
     {
         return $this->comment('FreeFind No Index Page');
     }
 
+    /**
+     * Renders the no-site-map annotation.
+     */
     public function noMap(): string
     {
         return $this->comment('FreeFind No Map');
     }
 
+    /**
+     * Renders the site-map title annotation.
+     */
     public function mapTitle(MapTitle $title): string
     {
         return $this->comment('FreeFind Map Title=' . $this->escaper->attribute($title->title));
     }
 
+    /**
+     * Renders the annotation that excludes a page from what's-new results.
+     */
     public function notNew(): string
     {
         return $this->comment('FreeFind Not New');
     }
 
+    /**
+     * Renders a what's-new annotation with its supplied optional attributes.
+     */
     public function whatsNew(WhatsNewEntry $entry): string
     {
         $attributes = [];
@@ -67,6 +94,9 @@ final class Renderer
         return $this->comment('FreeFind New ' . implode(' ', $attributes));
     }
 
+    /**
+     * Renders the explicit-link discovery annotation.
+     */
     public function links(ExplicitLinks $links): string
     {
         return $this->comment('FreeFind Links ' . implode(' ', array_map(
@@ -75,6 +105,9 @@ final class Renderer
         )));
     }
 
+    /**
+     * Renders the result-image annotation and its validated attributes.
+     */
     public function resultImage(ResultImage $image): string
     {
         $attributes = [
@@ -112,16 +145,25 @@ final class Renderer
         return $this->comment('FreeFind image ' . implode(' ', $attributes));
     }
 
+    /**
+     * Renders a site-wide link policy as FreeFind meta tags.
+     */
     public function globalLinkPolicy(LinkPolicy $policy): string
     {
         return $this->renderMetaPolicy($policy);
     }
 
+    /**
+     * Renders a page-level link policy as FreeFind meta tags.
+     */
     public function pageLinkPolicy(LinkPolicy $policy): string
     {
         return $this->renderMetaPolicy($policy);
     }
 
+    /**
+     * Opens a no-index content region and renders its start marker.
+     */
     public function beginNoIndex(): string
     {
         $this->state->begin('no-index');
@@ -130,7 +172,9 @@ final class Renderer
     }
 
     /**
-     * @throws InvalidMarkupException
+     * Closes a no-index content region and renders its end marker.
+     *
+     * @throws InvalidMarkupException When no matching no-index region is open.
      */
     public function endNoIndex(): string
     {
@@ -139,6 +183,9 @@ final class Renderer
         return $this->comment('FreeFind End No Index');
     }
 
+    /**
+     * Opens a no-follow content region and renders its start marker.
+     */
     public function beginNoFollow(): string
     {
         $this->state->begin('no-follow');
@@ -147,7 +194,9 @@ final class Renderer
     }
 
     /**
-     * @throws InvalidMarkupException
+     * Closes a no-follow content region and renders its end marker.
+     *
+     * @throws InvalidMarkupException When no matching no-follow region is open.
      */
     public function endNoFollow(): string
     {
@@ -156,11 +205,19 @@ final class Renderer
         return $this->comment('FreeFind end nofollow');
     }
 
+    /**
+     * Formats a date using FreeFind's expected GMT representation.
+     */
     private function formatDate(\DateTimeInterface $date): string
     {
         return str_replace(' UTC', ' GMT', Date::instance($date)->format('d M Y H:i:s T'));
     }
 
+    /**
+     * Renders validated link-policy values as FreeFind meta tags.
+     *
+     * @throws LogicException When a script policy value was not validated.
+     */
     private function renderMetaPolicy(LinkPolicy $policy): string
     {
         $values = [];
@@ -188,6 +245,9 @@ final class Renderer
         ));
     }
 
+    /**
+     * Wraps a rendered annotation body in an HTML comment.
+     */
     private function comment(string $body): string
     {
         return '<!-- ' . $body . ' -->';

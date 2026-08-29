@@ -6,14 +6,31 @@ namespace Freefind\Freefind\Configuration;
 
 use Freefind\Freefind\Exceptions\InvalidConfigurationException;
 
+/**
+ * Bounds applied to outbound FreeFind XML requests and response bodies.
+ */
 final readonly class HttpSettings
 {
+    /**
+     * Default connection timeout in seconds.
+     */
     public const int DEFAULT_CONNECT_TIMEOUT = 2;
 
+    /**
+     * Default total request timeout in seconds.
+     */
     public const int DEFAULT_TIMEOUT = 5;
 
+    /**
+     * Default maximum XML response size in bytes.
+     */
     public const int DEFAULT_MAX_RESPONSE_BYTES = 2_000_000;
 
+    /**
+     * Creates transport settings with positive, internally consistent limits.
+     *
+     * @throws InvalidConfigurationException When a timeout or response-size limit is invalid.
+     */
     public function __construct(
         public int $connectTimeout = self::DEFAULT_CONNECT_TIMEOUT,
         public int $timeout = self::DEFAULT_TIMEOUT,
@@ -33,7 +50,11 @@ final readonly class HttpSettings
     }
 
     /**
+     * Builds transport settings from the package configuration array.
+     *
      * @param  array<string, mixed>  $config
+     *
+     * @throws InvalidConfigurationException When a configured value is not an integer or violates the limits.
      */
     public static function fromConfig(array $config): self
     {
@@ -45,7 +66,11 @@ final readonly class HttpSettings
     }
 
     /**
+     * Reads one integer setting while preserving the configured default when it is absent.
+     *
      * @param  array<string, mixed>  $config
+     *
+     * @throws InvalidConfigurationException When the configured value is not an integer.
      */
     private static function integer(array $config, string $key, int $default): int
     {

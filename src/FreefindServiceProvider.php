@@ -31,8 +31,14 @@ use RuntimeException;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
+/**
+ * Registers FreeFind configuration, services, middleware aliases, views, and directives.
+ */
 class FreefindServiceProvider extends PackageServiceProvider
 {
+    /**
+     * Declares the package configuration file and view namespace.
+     */
     public function configurePackage(Package $package): void
     {
         $package
@@ -41,6 +47,12 @@ class FreefindServiceProvider extends PackageServiceProvider
             ->hasViews();
     }
 
+    /**
+     * Binds request-safe package services and optionally enables global spider middleware.
+     *
+     * @throws RuntimeException When the package configuration is not an array.
+     * @throws \Freefind\Freefind\Exceptions\InvalidConfigurationException When configured package values are invalid.
+     */
     #[Override]
     public function packageRegistered(): void
     {
@@ -140,6 +152,9 @@ class FreefindServiceProvider extends PackageServiceProvider
         }
     }
 
+    /**
+     * Registers middleware aliases and the package's Blade surface.
+     */
     #[Override]
     public function bootingPackage(): void
     {
