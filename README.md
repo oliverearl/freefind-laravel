@@ -13,6 +13,8 @@ Laravel-native integrations for FreeFind Page Search:
 
 The package does not crawl sites, build a local index, configure the FreeFind Control Center, register application routes/controllers, or implement DataSearch. The first supported release is the complete `1.0.0`; internal development milestones are not published prereleases.
 
+Read the [documentation catalogue](docs/README.md) for installation, integration guides, migration, troubleshooting, and project reference material.
+
 ## Installation
 
 ```bash
@@ -26,7 +28,7 @@ Set the public Page Search site ID:
 FREEFIND_SITE_ID=3225682
 ```
 
-The site ID appears in FreeFind URLs and is not a password or API secret. The package validates it as a string. See [configuration](docs/configuration.md) for endpoint, timeout, spider, and middleware settings.
+The site ID appears in FreeFind URLs and is not a password or API secret. The package validates it as a string.
 
 ## Hosted search
 
@@ -44,7 +46,7 @@ For a normal browser-submitted search, render the semantic form:
 />
 ```
 
-The component submits a `GET` request to FreeFind's HTTPS hosted endpoint with the configured `si` field. It is unstyled, does not load remote JavaScript, and does not require the paid XML feature. See [hosted search](docs/hosted-search.md).
+The component submits a `GET` request to FreeFind's HTTPS hosted endpoint with the configured `si` field. It is unstyled, does not load remote JavaScript, and does not require the paid XML feature.
 
 ## Crawler markup
 
@@ -57,7 +59,7 @@ Use the directives in the pages FreeFind should index:
 @freefindLinks([$page->canonicalUrl()])
 ```
 
-Paired directives cover ignored fragments and links. `freefind.annotate` provides conservative route-level `no-index`, `no-map`, and `not-new` annotations; `freefind.spider` is a separate opt-in presentation/cache hint. Spider detection never authorizes a request and cannot replace authentication or authorization. See [crawler markup](docs/markup.md) and [configuration](docs/configuration.md).
+Paired directives cover ignored fragments and links. `freefind.annotate` provides conservative route-level `no-index`, `no-map`, and `not-new` annotations; `freefind.spider` is a separate opt-in presentation/cache hint. Spider detection never authorizes a request and cannot replace authentication or authorization. See the [documentation catalogue](docs/README.md) for the complete markup and configuration guides.
 
 FreeFind must crawl the page again before changed annotations affect its index. Preserve `FreeFind` comments through Blade, HTML minifiers, CDNs, and response optimizers.
 
@@ -93,7 +95,7 @@ Only `get()` performs the request. The immutable builder supports sections, rele
 <x-freefind::results :results="$results" />
 ```
 
-Result titles, descriptions, and display URLs are safe plain-text fields and are escaped by default. `result->raw` preserves FreeFind's highlight-bearing values as explicitly untrusted data; do not pass them to `{!! !!}` or `HtmlString` without deliberate sanitization. See [XML search](docs/xml-search.md).
+Result titles, descriptions, and display URLs are safe plain-text fields and are escaped by default. `result->raw` preserves FreeFind's highlight-bearing values as explicitly untrusted data; do not pass them to `{!! !!}` or `HtmlString` without deliberate sanitization. See the [documentation catalogue](docs/README.md) for the complete XML search guide.
 
 ## Security and service boundaries
 
@@ -104,7 +106,7 @@ Result titles, descriptions, and display URLs are safe plain-text fields and are
 - The package does not register routes/controllers or automate account setup, indexing, templates, exclusions, or Control Center changes.
 - DataSearch requires a separate ordinary FreeFind account/site ID and is entirely outside `1.0.0`.
 
-Read [troubleshooting](docs/troubleshooting.md) for common account, indexing, middleware, and XML failures. [Migration guidance](docs/migration.md) maps legacy snippets to package APIs.
+Use the [documentation catalogue](docs/README.md) to find troubleshooting and migration guidance for common account, indexing, middleware, and XML issues.
 
 ## Testing
 
