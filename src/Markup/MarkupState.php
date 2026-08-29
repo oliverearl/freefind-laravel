@@ -8,6 +8,8 @@ use Freefind\Freefind\Exceptions\InvalidMarkup;
 
 final class MarkupState
 {
+    public const string REQUEST_ATTRIBUTE = 'freefind.markup_state';
+
     /**
      * @var list<string>
      */

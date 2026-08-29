@@ -41,3 +41,18 @@ it('normalizes comma-separated parameters and rejects unsupported annotations', 
         ->and(fn(): mixed => $middleware->handle($request, fn(): Response => response('ok'), 'keywords'))
         ->toThrow(InvalidMarkup::class);
 });
+
+it('does not carry collected annotations into a later request', function (): void {
+    Route::middleware('freefind.annotate:no-map')->get('/annotated', function (): Response {
+        return response(Blade::render('<head>@freefindHead</head>'));
+    });
+    Route::get('/plain', function (): Response {
+        return response(Blade::render('<head>@freefindHead</head>'));
+    });
+
+    $annotated = $this->get('/annotated');
+    $plain = $this->get('/plain');
+
+    expect($annotated->getContent())->toContain('FreeFind No Map')
+        ->and($plain->getContent())->not->toContain('FreeFind No Map');
+});

@@ -61,11 +61,42 @@ class FreefindServiceProvider extends PackageServiceProvider
         ));
 
         $this->app->singleton(HtmlCommentEscaper::class);
-        $this->app->scoped(MarkupState::class);
-        $this->app->scoped(AnnotationCollector::class);
-        $this->app->scoped(Renderer::class);
+        $this->app->bind(MarkupState::class, function (Application $app): MarkupState {
+            if (! $app->bound('request')) {
+                return new MarkupState();
+            }
 
-        $this->app->scoped(SpiderContext::class, function (Application $app): SpiderContext {
+            $request = $app->make('request');
+            $state = $request->attributes->get(MarkupState::REQUEST_ATTRIBUTE);
+
+            if (! $state instanceof MarkupState) {
+                $state = new MarkupState();
+                $request->attributes->set(MarkupState::REQUEST_ATTRIBUTE, $state);
+            }
+
+            return $state;
+        });
+        $this->app->bind(AnnotationCollector::class, function (Application $app): AnnotationCollector {
+            if (! $app->bound('request')) {
+                return new AnnotationCollector();
+            }
+
+            $request = $app->make('request');
+            $collector = $request->attributes->get(AnnotationCollector::REQUEST_ATTRIBUTE);
+
+            if (! $collector instanceof AnnotationCollector) {
+                $collector = new AnnotationCollector();
+                $request->attributes->set(AnnotationCollector::REQUEST_ATTRIBUTE, $collector);
+            }
+
+            return $collector;
+        });
+        $this->app->bind(Renderer::class, fn(Application $app): Renderer => new Renderer(
+            $app->make(HtmlCommentEscaper::class),
+            $app->make(MarkupState::class),
+        ));
+
+        $this->app->bind(SpiderContext::class, function (Application $app): SpiderContext {
             if (! $app->bound('request')) {
                 return SpiderContext::notSpider();
             }

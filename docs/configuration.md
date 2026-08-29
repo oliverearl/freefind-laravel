@@ -54,6 +54,8 @@ Detection is only a presentation and response-policy hint. A user-agent can be s
 
 Keep a dedicated crawlable route group outside `StartSession` if your application needs crawler requests to avoid session startup. That decision belongs to the application because middleware order and authentication requirements are application-specific.
 
+The context is scoped to the current request. Under a long-running worker, a later browser request is detected independently and does not inherit the previous request's spider state or cache policy. Place the alias in the route middleware group where the application wants this presentation/performance behavior; keep authentication and authorization middleware independent of it.
+
 ## Route annotations
 
 For conservative page-level annotations, opt in to the `freefind.annotate` middleware and render the collector in the document head:

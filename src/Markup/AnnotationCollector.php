@@ -6,6 +6,8 @@ namespace Freefind\Freefind\Markup;
 
 final class AnnotationCollector
 {
+    public const string REQUEST_ATTRIBUTE = 'freefind.annotation_collector';
+
     /**
      * @var list<string>
      */
