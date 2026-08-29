@@ -5,13 +5,13 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/freefind/freefind-laravel/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/freefind/freefind-laravel/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/freefind/freefind-laravel.svg?style=flat-square)](https://packagist.org/packages/freefind/freefind-laravel)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Laravel-native integrations for FreeFind Page Search: secure crawler annotations, an accessible hosted search form, opt-in spider context, and a typed XML client planned for the complete `1.0.0` release.
 
 ## Project planning
 
 The research-backed product scope, FreeFind capability map, proposed architecture, public API, delivery roadmap, and open decisions are collected in the [project planning pack](docs/planning/README.md).
 
-Current implementation guides: [configuration and spider handling](docs/configuration.md) and [crawler markup](docs/markup.md).
+Current implementation guides: [configuration and spider handling](docs/configuration.md), [hosted search](docs/hosted-search.md), and [crawler markup](docs/markup.md).
 
 ## Support us
 

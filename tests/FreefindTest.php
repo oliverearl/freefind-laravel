@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Freefind;
+use Freefind\Freefind\Search\Hosted\HostedSearch;
 
 beforeEach(function (): void {
     $this->freefind = resolve(Freefind::class);
@@ -17,7 +18,8 @@ it('exposes the configured account and string site id', function (): void {
     $freefind = resolve(Freefind::class);
 
     expect($freefind->siteId())->toBe('0012345')
-        ->and($freefind->account()->siteId)->toBe('0012345');
+        ->and($freefind->account()->siteId)->toBe('0012345')
+        ->and($freefind->hostedSearch())->toBeInstanceOf(HostedSearch::class);
 });
 
 it('reports a request as a spider only through the request-local context', function (): void {

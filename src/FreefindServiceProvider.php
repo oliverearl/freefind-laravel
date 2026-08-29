@@ -11,6 +11,8 @@ use Freefind\Freefind\Markup\AnnotationCollector;
 use Freefind\Freefind\Markup\HtmlCommentEscaper;
 use Freefind\Freefind\Markup\MarkupState;
 use Freefind\Freefind\Markup\Renderer;
+use Freefind\Freefind\Search\Hosted\HostedSearch;
+use Freefind\Freefind\View\Components\SearchForm;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
 use Illuminate\Contracts\Foundation\Application;
@@ -53,6 +55,9 @@ class FreefindServiceProvider extends PackageServiceProvider
         $this->app->bind(SpiderSettings::class, fn(Application $app): SpiderSettings => $app->make(
             FreefindConfig::class,
         )->spider);
+        $this->app->bind(HostedSearch::class, fn(Application $app): HostedSearch => new HostedSearch(
+            $app->make(FreefindConfig::class)->account,
+        ));
 
         $this->app->singleton(HtmlCommentEscaper::class);
         $this->app->scoped(MarkupState::class);
@@ -87,6 +92,7 @@ class FreefindServiceProvider extends PackageServiceProvider
         parent::bootingPackage();
 
         $this->app->make(Router::class)->aliasMiddleware('freefind.spider', DetectFreefindSpider::class);
+        Blade::component(SearchForm::class, 'freefind::search-form');
 
         Blade::directive('freefindKeywords', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->keywords(\\Freefind\\Freefind\\Markup\\Keywords::from(' . $expression . ')); ?>');
         Blade::directive('freefindDocumentDate', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->documentDate(\\Freefind\\Freefind\\Markup\\DocumentDate::from(' . $expression . ')); ?>');

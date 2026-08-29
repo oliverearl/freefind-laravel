@@ -1,0 +1,136 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Freefind\Freefind\View\Components;
+
+use Freefind\Freefind\Exceptions\InvalidMarkup;
+use Freefind\Freefind\Search\Hosted\HostedSearch;
+use Freefind\Freefind\Search\Hosted\Language;
+use Freefind\Freefind\Search\Hosted\Section;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
+
+final class SearchForm extends Component
+{
+    /**
+     * @param  array<array-key, mixed>  $sections
+     */
+    public function __construct(
+        private readonly HostedSearch $search,
+        public string $label = 'Search this site',
+        public array $sections = [],
+        public Language|string|null $language = null,
+        public bool $hideResultsForm = false,
+        public bool $extendedStyles = false,
+        public ?string $query = null,
+        public string $inputId = 'freefind-query',
+        public string $submitLabel = 'Search',
+        public string $method = 'get',
+        public ?string $target = null,
+    ) {
+        if ($this->label === '' || $this->submitLabel === '') {
+            throw new InvalidMarkup('FreeFind search form labels must not be empty.');
+        }
+
+        foreach ([$this->label, $this->submitLabel] as $text) {
+            if (preg_match('//u', $text) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $text) === 1) {
+                throw new InvalidMarkup('FreeFind search form labels must be valid text without control characters.');
+            }
+        }
+
+        if ($this->method !== 'get') {
+            throw new InvalidMarkup('FreeFind hosted search forms only support the GET method.');
+        }
+
+        if (! preg_match('/^[A-Za-z][A-Za-z0-9_-]{0,63}$/', $this->inputId)) {
+            throw new InvalidMarkup('FreeFind search form input IDs must be valid HTML identifiers.');
+        }
+
+        if ($this->target !== null && ! preg_match('/^(?:_(?:blank|self|parent|top)|[A-Za-z][A-Za-z0-9:_-]{0,63})$/', $this->target)) {
+            throw new InvalidMarkup('FreeFind search form targets must be valid browsing-context names.');
+        }
+
+        foreach ($this->sections as $id => $label) {
+            if (! is_string($id) || ! is_string($label)) {
+                throw new InvalidMarkup('FreeFind search form sections must be a string identifier-to-label map.');
+            }
+
+            Section::from($id, $label);
+        }
+    }
+
+    public function action(): string
+    {
+        return $this->search->formAction()->value;
+    }
+
+    public function queryValue(): string
+    {
+        if ($this->query !== null) {
+            return $this->safeQuery($this->query);
+        }
+
+        $query = request()->query('query', '');
+
+        return is_string($query) ? $this->safeQuery($query) : '';
+    }
+
+    public function languageValue(): ?string
+    {
+        return $this->language instanceof Language
+            ? $this->language->code
+            : ($this->language === null ? null : Language::fromCode($this->language)->code);
+    }
+
+    /**
+     * @return list<Section>
+     */
+    public function sectionOptions(): array
+    {
+        $options = [];
+
+        foreach ($this->sections as $id => $label) {
+            if (! is_string($id) || ! is_string($label)) {
+                throw new InvalidMarkup('FreeFind search form sections must be a string identifier-to-label map.');
+            }
+
+            $options[] = Section::from($id, $label);
+        }
+
+        return $options;
+    }
+
+    private function safeQuery(string $query): string
+    {
+        if (preg_match('//u', $query) !== 1 || preg_match('/[\x00-\x1F\x7F]/', $query) === 1) {
+            throw new InvalidMarkup('FreeFind search queries must be valid text without control characters.');
+        }
+
+        return $query;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function selectedSections(): array
+    {
+        /** @var mixed $sections */
+        $sections = request()->query('s', []);
+
+        if (is_string($sections)) {
+            return [$sections];
+        }
+
+        if (! is_array($sections)) {
+            return [];
+        }
+
+        return array_values(array_filter($sections, 'is_string'));
+    }
+
+    public function render(): View
+    {
+        return view('freefind-laravel::components.search-form');
+    }
+}
