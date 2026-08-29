@@ -5,42 +5,57 @@ declare(strict_types=1);
 namespace Freefind\Freefind\Http\Middleware;
 
 use Closure;
-use Freefind\Freefind\Freefind;
-use Illuminate\Foundation\Application;
+use Freefind\Freefind\Configuration\SpiderSettings;
+use Freefind\Freefind\Spider\SpiderContext;
+use Freefind\Freefind\Spider\SpiderDetector;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class DetectFreefindSpider
+final class DetectFreefindSpider
 {
-    /**
-     * A list of known Freefind user agents.
-     *
-     * @var list<string>
-     */
-    public const array KNOWN_FREEFIND_USER_AGENTS = [
-        'freefind/2.1',
-    ];
+    public function __construct(
+        private readonly SpiderDetector $detector,
+        private readonly SpiderSettings $settings,
+    ) {}
 
     /**
-     * Create a new instance of the middleware.
-     */
-    public function __construct(private readonly Application $application) {}
-
-    /**
-     * Handle an incoming request.
+     * @param  Closure(Request): mixed  $next
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        $userAgent = Str::lower($request->userAgent() ?? '');
+        $matchedUserAgent = $this->detector->detect($request->userAgent());
+        $context = $matchedUserAgent === null
+            ? SpiderContext::notSpider()
+            : SpiderContext::detected($matchedUserAgent);
 
-        if (Str::contains($userAgent, self::KNOWN_FREEFIND_USER_AGENTS)) {
-            $this->application->instance(Freefind::FREEFIND_REQUEST_INDICATOR_KEY, true);
+        $request->attributes->set(SpiderContext::REQUEST_ATTRIBUTE, $context);
 
-            Config::set('session.driver', 'array');
-            header('Cache-Control: public, max-age=3600');
+        $response = $next($request);
+
+        if ($context->isSpider() && $this->canApplyCachePolicy($response)) {
+            $response->headers->set('Cache-Control', $response->headers->get('Cache-Control') ?? $this->settings->cacheControl);
         }
 
-        return $next($request);
+        return $response;
+    }
+
+    private function canApplyCachePolicy(mixed $response): bool
+    {
+        if (
+            ! $response instanceof Response
+            || $response instanceof BinaryFileResponse
+            || $response instanceof RedirectResponse
+            || $response instanceof StreamedResponse
+            || $response->headers->has('Content-Encoding')
+        ) {
+            return false;
+        }
+
+        $contentType = strtolower($response->headers->get('Content-Type', ''));
+
+        return $contentType === '' || str_starts_with($contentType, 'text/html');
     }
 }

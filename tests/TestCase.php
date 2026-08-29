@@ -21,7 +21,7 @@ abstract class TestCase extends Orchestra
     protected function setUp(): void
     {
         parent::setUp();
-        config()->set('freefind-laravel.site_id', $this->faker->randomNumber(7));
+        config()->set('freefind-laravel.site_id', (string) $this->faker->randomNumber(7));
     }
 
     /** @inheritDoc */

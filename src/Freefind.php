@@ -4,34 +4,29 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind;
 
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Config;
+use Freefind\Freefind\Configuration\Account;
+use Freefind\Freefind\Configuration\FreefindConfig;
+use Freefind\Freefind\Spider\SpiderContext;
 
-class Freefind
+final class Freefind
 {
-    /**
-     * The key that is registered in the container to indicate that the current request is a Freefind request.
-     */
-    public const string FREEFIND_REQUEST_INDICATOR_KEY = 'isFreefindRequest';
+    public function __construct(
+        private readonly FreefindConfig $config,
+        private readonly SpiderContext $spiderContext,
+    ) {}
 
-    /**
-     * Create a new Freefind instance.
-     */
-    public function __construct(private readonly Application $application) {}
-
-    /**
-     * Determine if the current request is a Freefind request.
-     */
-    public function isFreeFindRequest(): bool
+    public function account(): Account
     {
-        return $this->application->bound(self::FREEFIND_REQUEST_INDICATOR_KEY);
+        return $this->config->account;
     }
 
-    /**
-     * Get the Freefind site ID from the configuration.
-     */
-    public function getSiteId(): int
+    public function siteId(): string
     {
-        return Config::integer('freefind-laravel.site_id');
+        return $this->config->account->siteId;
+    }
+
+    public function isSpiderRequest(): bool
+    {
+        return $this->spiderContext->isSpider();
     }
 }

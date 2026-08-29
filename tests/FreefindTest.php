@@ -2,27 +2,24 @@
 
 declare(strict_types=1);
 
+use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Freefind;
 
 beforeEach(function (): void {
-    app()->forgetInstance(Freefind::FREEFIND_REQUEST_INDICATOR_KEY);
     $this->freefind = resolve(Freefind::class);
 });
 
-it('can determine if the current request is a Freefind request', function (): void {
-    // Initially, it should not be a Freefind request.
-    expect($this->freefind->isFreeFindRequest())->toBeFalse();
+it('exposes the configured account and string site id', function (): void {
+    config(['freefind-laravel.site_id' => '0012345']);
+    app()->forgetInstance(Freefind::class);
+    app()->forgetInstance(FreefindConfig::class);
 
-    // Simulate a Freefind request by binding the indicator in the container.
-    app()->instance(Freefind::FREEFIND_REQUEST_INDICATOR_KEY, true);
+    $freefind = resolve(Freefind::class);
 
-    // Now it should be a Freefind request.
-    expect($this->freefind->isFreeFindRequest())->toBeTrue();
+    expect($freefind->siteId())->toBe('0012345')
+        ->and($freefind->account()->siteId)->toBe('0012345');
 });
 
-it('can retrieve the Freefind site ID from the configuration', function (): void {
-    $value = fake()->randomNumber(7);
-    config(['freefind-laravel.site_id' => $value]);
-
-    expect($this->freefind->getSiteId())->toEqual($value);
+it('reports a request as a spider only through the request-local context', function (): void {
+    expect($this->freefind->isSpiderRequest())->toBeFalse();
 });

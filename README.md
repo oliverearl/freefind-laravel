@@ -11,6 +11,8 @@ This is where your description should go. Limit it to a paragraph or two. Consid
 
 The research-backed product scope, FreeFind capability map, proposed architecture, public API, delivery roadmap, and open decisions are collected in the [project planning pack](docs/planning/README.md).
 
+Current implementation guides: [configuration and spider handling](docs/configuration.md).
+
 ## Support us
 
 [<img src="https://github-ads.s3.eu-central-1.amazonaws.com/freefind-laravel.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/freefind-laravel)

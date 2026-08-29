@@ -2,11 +2,25 @@
 
 declare(strict_types=1);
 
-// config for Freefind/Freefind
+// Configuration for FreeFind's Page Search integration.
 return [
-    /*
-     * Your Freefind site ID. Without this, the package won't work properly. You can find this in your account settings
-     * in the top left hand corner of the Freefind control center. It is a numerical string.
-     */
-    'site_id' => (int) env('FREEFIND_SITE_ID', 0),
+    'site_id' => env('FREEFIND_SITE_ID'),
+
+    'endpoints' => [
+        'html' => 'https://search.freefind.com/find.html',
+        'xml' => 'https://search.freefind.com/find.xml',
+        'index' => 'https://search.freefind.com/siteindex.html',
+    ],
+
+    'http' => [
+        'connect_timeout' => 2,
+        'timeout' => 5,
+        'max_response_bytes' => 2_000_000,
+    ],
+
+    'spider' => [
+        'middleware' => false,
+        'user_agents' => ['freefind/2.1'],
+        'cache_control' => 'public, max-age=3600',
+    ],
 ];
