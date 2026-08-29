@@ -49,6 +49,30 @@ $results = app(Freefind::class)->search($request->string('q')->toString())
 
 Each option method returns a new builder. `get()` is the terminal operation and performs one XML request. The builder covers simple queries; use `app(Freefind::class)->xml()->execute(...)` with `AdvancedQuery`, `RefinedQuery`, and explicit `SearchOptions` when the request needs a different query shape.
 
+## Test fake
+
+Package tests can use a fixture-backed fake without replacing Laravel's normal `Http::fake()` support:
+
+```php
+use Freefind\Freefind\Facades\Freefind;
+use Freefind\Freefind\Testing\SearchFixture;
+use Freefind\Freefind\Testing\SentSearch;
+
+Freefind::fake([
+    SearchFixture::for('blade directives')->fromFile(
+        base_path('tests/Fixtures/freefind/success.xml'),
+    ),
+]);
+
+$results = Freefind::search('blade directives')->get();
+
+Freefind::assertSearched(fn (SentSearch $search): bool =>
+    $search->query === 'blade directives'
+);
+```
+
+The fake records query text, selected sections, offset, and page size, and returns the fixture through the same response parser used by the real client. It is test support only; application code should continue to call the client explicitly with a user-initiated query.
+
 ## Executing a search
 
 Build the request from the caller's validated, user-entered query and invoke the XML client explicitly:

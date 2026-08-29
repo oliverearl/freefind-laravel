@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Freefind\Freefind;
 
+use Closure;
 use Freefind\Freefind\Configuration\Account;
 use Freefind\Freefind\Configuration\FreefindConfig;
+use Freefind\Freefind\Contracts\XmlResponseParser;
+use Freefind\Freefind\Exceptions\InvalidSearchRequest;
 use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\XmlSearchQuery;
 use Freefind\Freefind\Search\Xml\Query\SimpleQuery;
 use Freefind\Freefind\Spider\SpiderContext;
+use Freefind\Freefind\Testing\SearchFake;
+use Freefind\Freefind\Testing\SearchFixture;
 
 final class Freefind
 {
@@ -18,7 +23,8 @@ final class Freefind
         private readonly FreefindConfig $config,
         private readonly SpiderContext $spiderContext,
         private readonly HostedSearch $hostedSearch,
-        private readonly FreefindXmlClient $xmlClient,
+        private FreefindXmlClient $xmlClient,
+        private ?SearchFake $searchFake = null,
     ) {}
 
     public function account(): Account
@@ -53,5 +59,26 @@ final class Freefind
             account: $this->config->account,
             query: new SimpleQuery($query),
         );
+    }
+
+    /**
+     * @param  list<SearchFixture>  $fixtures
+     */
+    public function fake(array $fixtures): void
+    {
+        $this->searchFake = new SearchFake($fixtures);
+        $this->xmlClient = new FreefindXmlClient(
+            $this->searchFake,
+            app(XmlResponseParser::class),
+        );
+    }
+
+    public function assertSearched(Closure $predicate): void
+    {
+        if ($this->searchFake === null) {
+            throw new InvalidSearchRequest('FreeFind search assertions require Freefind::fake() first.');
+        }
+
+        $this->searchFake->assertSearched($predicate);
     }
 }
