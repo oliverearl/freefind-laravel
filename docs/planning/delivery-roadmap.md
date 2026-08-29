@@ -4,9 +4,9 @@
 
 Build vertical internal slices, but do not publish partial `0.x` releases. Generated markup and XML fixtures are the contracts; Blade components sit on top only after those contracts are stable. The first published package is the complete `1.0.0`.
 
-Status: configuration foundation and opt-in spider context are implemented; crawler markup remains the next incomplete vertical slice. Remote contract fixture acquisition is still pending and no live service is used by normal tests.
+Status: configuration, opt-in spider context, and the crawler-markup renderer/directives are implemented. Hosted search UI is the next incomplete vertical slice; remote contract fixture acquisition remains pending and no live service is used by normal tests.
 
-Next: implement the immutable annotation objects, exact renderer, escaping/URL validation, and Blade directives in Milestone 1.
+Next: implement the hosted HTTPS URL builder and accessible unstyled search-form component in Milestone 2.
 
 ## Milestone 0 — decisions and contract fixtures
 

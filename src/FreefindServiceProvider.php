@@ -7,11 +7,16 @@ namespace Freefind\Freefind;
 use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Configuration\SpiderSettings;
 use Freefind\Freefind\Http\Middleware\DetectFreefindSpider;
+use Freefind\Freefind\Markup\AnnotationCollector;
+use Freefind\Freefind\Markup\HtmlCommentEscaper;
+use Freefind\Freefind\Markup\MarkupState;
+use Freefind\Freefind\Markup\Renderer;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Blade;
 use Override;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -49,6 +54,11 @@ class FreefindServiceProvider extends PackageServiceProvider
             FreefindConfig::class,
         )->spider);
 
+        $this->app->singleton(HtmlCommentEscaper::class);
+        $this->app->scoped(MarkupState::class);
+        $this->app->scoped(AnnotationCollector::class);
+        $this->app->scoped(Renderer::class);
+
         $this->app->scoped(SpiderContext::class, function (Application $app): SpiderContext {
             if (! $app->bound('request')) {
                 return SpiderContext::notSpider();
@@ -77,5 +87,22 @@ class FreefindServiceProvider extends PackageServiceProvider
         parent::bootingPackage();
 
         $this->app->make(Router::class)->aliasMiddleware('freefind.spider', DetectFreefindSpider::class);
+
+        Blade::directive('freefindKeywords', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->keywords(\\Freefind\\Freefind\\Markup\\Keywords::from(' . $expression . ')); ?>');
+        Blade::directive('freefindDocumentDate', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->documentDate(\\Freefind\\Freefind\\Markup\\DocumentDate::from(' . $expression . ')); ?>');
+        Blade::directive('freefindNoIndexPage', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->noIndexPage(); ?>');
+        Blade::directive('freefindNoIndex', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->beginNoIndex(); ?>');
+        Blade::directive('endFreefindNoIndex', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->endNoIndex(); ?>');
+        Blade::directive('freefindNoFollow', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->beginNoFollow(); ?>');
+        Blade::directive('endFreefindNoFollow', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->endNoFollow(); ?>');
+        Blade::directive('freefindLinks', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->links(\\Freefind\\Freefind\\Markup\\ExplicitLinks::from(' . $expression . ')); ?>');
+        Blade::directive('freefindNoMap', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->noMap(); ?>');
+        Blade::directive('freefindMapTitle', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->mapTitle(\\Freefind\\Freefind\\Markup\\MapTitle::from(' . $expression . ')); ?>');
+        Blade::directive('freefindNotNew', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->notNew(); ?>');
+        Blade::directive('freefindWhatsNew', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->whatsNew(\\Freefind\\Freefind\\Markup\\WhatsNewEntry::from(' . $expression . ')); ?>');
+        Blade::directive('freefindResultImage', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->resultImage(\\Freefind\\Freefind\\Markup\\ResultImage::from(' . $expression . ')); ?>');
+        Blade::directive('freefindLinkPolicy', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->pageLinkPolicy(\\Freefind\\Freefind\\Markup\\LinkPolicy::from(' . $expression . ')); ?>');
+        Blade::directive('freefindGlobalLinkPolicy', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->globalLinkPolicy(\\Freefind\\Freefind\\Markup\\LinkPolicy::from(' . $expression . ')); ?>');
+        Blade::directive('freefindHead', fn(): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\AnnotationCollector::class)->render(); ?>');
     }
 }
