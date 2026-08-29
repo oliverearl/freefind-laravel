@@ -71,6 +71,14 @@ Applications that collect annotations from middleware or application code can pl
 
 The hook only renders the request-scoped collector. It does not authorize the request, inspect the user agent, or contact FreeFind.
 
+The package provides a conservative route middleware for common page annotations:
+
+```php
+Route::middleware('freefind.annotate:no-index,no-map')->get('/archive', ArchiveController::class);
+```
+
+It supports `no-index`, `no-map`, and `not-new`. The application still owns the route, authorization, and placement of `@freefindHead`; spider detection is a separate opt-in middleware.
+
 The package does not provide directives for DataSearch (`Index Listings Only`, `Listing`, `Category`, and related tags), deprecated `<nofollow>`/`<nofollowscript>`, or the deprecated `FreeFind No Parameters` comment. DataSearch is outside the `1.0.0` scope.
 
 After changing annotations, ask FreeFind to re-spider the site. Ensure Blade, HTML minifiers, CDNs, and response optimizers preserve `FreeFind` comments; removing them prevents the crawler from seeing the intended instructions.

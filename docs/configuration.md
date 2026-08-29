@@ -53,3 +53,22 @@ Route::middleware('freefind.spider')->group(function (): void {
 Detection is only a presentation and response-policy hint. A user-agent can be spoofed, so spider detection must never bypass authentication, authorization, CSRF, tenancy, unpublished-content rules, or other access controls. The middleware stores a request-local context and may apply the configured cache policy to ordinary HTML responses. It does not change the session driver or call PHP's global `header()` function.
 
 Keep a dedicated crawlable route group outside `StartSession` if your application needs crawler requests to avoid session startup. That decision belongs to the application because middleware order and authentication requirements are application-specific.
+
+## Route annotations
+
+For conservative page-level annotations, opt in to the `freefind.annotate` middleware and render the collector in the document head:
+
+```php
+Route::middleware('freefind.annotate:no-index,no-map')->group(function (): void {
+    // The application still owns the route and its authorization.
+});
+```
+
+```blade
+<head>
+    @freefindHead
+    {{-- normal application head content --}}
+</head>
+```
+
+The middleware supports `no-index`, `no-map`, and `not-new`. It adds those exact package-rendered annotations before the route runs; application code can add further safe annotations to the request-scoped collector. Unsupported names fail clearly. This middleware does not detect spiders, grant access, or make a network request. See [crawler markup](markup.md) for direct directives and the collector boundary.

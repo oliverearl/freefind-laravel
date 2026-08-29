@@ -6,6 +6,7 @@ namespace Freefind\Freefind;
 
 use Freefind\Freefind\Configuration\FreefindConfig;
 use Freefind\Freefind\Configuration\SpiderSettings;
+use Freefind\Freefind\Http\Middleware\AddFreefindAnnotations;
 use Freefind\Freefind\Http\Middleware\DetectFreefindSpider;
 use Freefind\Freefind\Markup\AnnotationCollector;
 use Freefind\Freefind\Markup\HtmlCommentEscaper;
@@ -92,6 +93,7 @@ class FreefindServiceProvider extends PackageServiceProvider
         parent::bootingPackage();
 
         $this->app->make(Router::class)->aliasMiddleware('freefind.spider', DetectFreefindSpider::class);
+        $this->app->make(Router::class)->aliasMiddleware('freefind.annotate', AddFreefindAnnotations::class);
         Blade::component(SearchForm::class, 'freefind::search-form');
 
         Blade::directive('freefindKeywords', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->keywords(\\Freefind\\Freefind\\Markup\\Keywords::from(' . $expression . ')); ?>');
