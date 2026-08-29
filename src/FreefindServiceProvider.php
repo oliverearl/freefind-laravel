@@ -19,7 +19,12 @@ use Freefind\Freefind\Search\Hosted\HostedSearch;
 use Freefind\Freefind\Search\Xml\FreefindXmlClient;
 use Freefind\Freefind\Search\Xml\Transport\LaravelXmlSearchTransport;
 use Freefind\Freefind\Search\Xml\Response\FreefindXmlResponseParser;
+use Freefind\Freefind\View\Components\EmptyState;
+use Freefind\Freefind\View\Components\Pagination;
+use Freefind\Freefind\View\Components\ResultItem;
+use Freefind\Freefind\View\Components\Results;
 use Freefind\Freefind\View\Components\SearchForm;
+use Freefind\Freefind\View\Components\SpellingSuggestion;
 use Freefind\Freefind\Spider\SpiderContext;
 use Freefind\Freefind\Spider\SpiderDetector;
 use Illuminate\Contracts\Foundation\Application;
@@ -144,6 +149,11 @@ class FreefindServiceProvider extends PackageServiceProvider
         $this->app->make(Router::class)->aliasMiddleware('freefind.spider', DetectFreefindSpider::class);
         $this->app->make(Router::class)->aliasMiddleware('freefind.annotate', AddFreefindAnnotations::class);
         Blade::component(SearchForm::class, 'freefind::search-form');
+        Blade::component(Results::class, 'freefind::results');
+        Blade::component(ResultItem::class, 'freefind::result-item');
+        Blade::component(Pagination::class, 'freefind::pagination');
+        Blade::component(SpellingSuggestion::class, 'freefind::spelling-suggestion');
+        Blade::component(EmptyState::class, 'freefind::empty-state');
 
         Blade::directive('freefindKeywords', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->keywords(\\Freefind\\Freefind\\Markup\\Keywords::from(' . $expression . ')); ?>');
         Blade::directive('freefindDocumentDate', fn(string $expression): string => '<?php echo app(\\Freefind\\Freefind\\Markup\\Renderer::class)->documentDate(\\Freefind\\Freefind\\Markup\\DocumentDate::from(' . $expression . ')); ?>');

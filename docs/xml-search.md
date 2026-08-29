@@ -1,6 +1,6 @@
 # XML search request core
 
-The package's XML integration is for subscribed regular Page Search accounts only. The current milestone provides typed request models, deterministic HTTPS URL encoding, a bounded Laravel HTTP transport, a tolerant response parser with typed result models, and an explicit terminal client call. Result views and query-builder ergonomics are separate remaining work.
+The package's XML integration is for subscribed regular Page Search accounts only. The current milestone provides typed request models, deterministic HTTPS URL encoding, a bounded Laravel HTTP transport, a tolerant response parser with typed result models, an explicit terminal client call, and semantic result components. Query-builder ergonomics remain separate work.
 
 FreeFind documents the XML feed as available only in response to a user entering a search term. Do not use it for scheduled, robotic, speculative, bulk, or prefetch queries. DataSearch and web-wide XML search are outside this package's scope.
 
@@ -60,8 +60,29 @@ Successful results expose counts, the returned query, searched sections, the aut
 
 Result titles, descriptions, and display URLs are available as safe plain-text fields for normal Blade escaping. `raw` separately preserves the remote highlight-bearing title, description, and display URL values. These raw fields are untrusted remote data and must be sanitized before deliberate HTML rendering; the package never wraps them in `HtmlString` automatically.
 
+## Result components
+
+Render the parsed result set with the package's semantic, unstyled components:
+
+```blade
+<x-freefind::results
+    :results="$results"
+    :previous-url="$previousUrl"
+    :next-url="$nextUrl"
+    :spelling-url="$spellingUrl"
+    heading="Documentation results"
+    empty-message="No documentation matched your search."
+    heading-id="documentation-results"
+    class="search-results"
+/>
+```
+
+The component renders a heading, an ordered result list, an empty-state message, an optional spelling suggestion, and pagination. It accepts application-generated URLs because the package does not register a search route or assume a route name. Previous and next links appear only when the local `SearchWindow` says that page exists. The component validates absolute `http`/`https` and root-relative navigation URLs, rejects script/data/protocol-relative targets, and escapes all output.
+
+The result item uses the safe `title`, `description`, and `displayUrl` fields. It adds `rel="noopener noreferrer"` for a `_blank` result target and formats a parsed date as a semantic `<time>` element. The package views never render `result->raw` fields; sanitize those explicitly before using them in an application-owned custom view.
+
 ## Deliberate boundaries
 
-The request core does not expose deprecated `id`/`ics` fields, `xslt`, DTD enablement, or `search=web`. It does not cache or schedule searches. The transport uses HTTPS, short configured timeouts, no application cookies or authorization headers, one retry for connection/transient-server failures, no automatic redirect following, and a response-size limit. A request is sent only when the client's explicit `execute()` method is called. Query-builder ergonomics, exception presentation, and semantic result views remain separate from this protocol boundary.
+The request core does not expose deprecated `id`/`ics` fields, `xslt`, DTD enablement, or `search=web`. It does not cache or schedule searches. The transport uses HTTPS, short configured timeouts, no application cookies or authorization headers, one retry for connection/transient-server failures, no automatic redirect following, and a response-size limit. A request is sent only when the client's explicit `execute()` method is called. Query-builder ergonomics and exception presentation remain separate from this protocol boundary.
 
-FreeFind result fields are documented as HTML and may contain highlight markup. The eventual package result model will keep safe plain text separate from explicitly raw, untrusted fields; do not render remote XML values as trusted HTML.
+FreeFind result fields are documented as HTML and may contain highlight markup. The package result model keeps safe plain text separate from explicitly raw, untrusted fields; do not render remote XML values as trusted HTML.
