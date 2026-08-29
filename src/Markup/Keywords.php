@@ -47,7 +47,6 @@ final readonly class Keywords
             HtmlCommentEscaper::assertSafe($word);
         }
 
-        /** @var list<string> $words */
         $this->words = $words;
         $this->count = $count;
     }

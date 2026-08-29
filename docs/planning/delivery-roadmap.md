@@ -8,7 +8,7 @@ Status: configuration, opt-in spider context, crawler-markup renderer/directives
 
 Next: run the live-contract check and acquire representative remote fixtures only when an operator supplies a subscribed account/query.
 
-Validation: the configured PHP 8.4/8.5 × Laravel 11/12 × lowest/stable matrix passes in disposable copies, and the current dependency set reports no Composer security advisories. The normal suite remains network-free; remote fixture acquisition and live verification are still pending.
+Validation: the configured PHP 8.4/8.5 × Laravel 11/12 × lowest/stable matrix passes in disposable copies, and the current dependency set reports no Composer security advisories. The maintainer `composer analyse` script sets its own 1G allowance for Larastan workers. The normal suite remains network-free; remote fixture acquisition and live verification are still pending.
 
 ## Milestone 0 — decisions and contract fixtures
 
